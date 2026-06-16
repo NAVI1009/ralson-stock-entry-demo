@@ -321,12 +321,7 @@ if selected:
             LOG_FILE,
             index=False
         )
-df.to_excel(MASTER_FILE, index=False)
 
-st.success("Saved")
-
-test = pd.read_excel(MASTER_FILE)
-st.write(test.head())
         # ==========================
         # SUCCESS CARD
         # ==========================
