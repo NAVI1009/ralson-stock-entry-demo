@@ -3,7 +3,16 @@ import pandas as pd
 import os
 from google_sheets import client
 from config import SHEET_ID
+users_ws = sheet.worksheet("users")
 
+users_df = pd.DataFrame(
+    users_ws.get_all_records()
+)
+logs_ws = sheet.worksheet("logs")
+
+logs_df = pd.DataFrame(
+    logs_ws.get_all_records()
+)
 sheet = client.open_by_key(SHEET_ID)
 config_ws = sheet.worksheet("Config")
 
