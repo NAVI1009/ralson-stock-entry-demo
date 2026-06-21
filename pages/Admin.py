@@ -263,7 +263,7 @@ st.subheader("🗑️ Delete User")
 
 user_to_delete = st.selectbox(
     "Select User",
-    users_df["UserId"]
+    users_df["UserID"]
     .tolist()
 )
 
