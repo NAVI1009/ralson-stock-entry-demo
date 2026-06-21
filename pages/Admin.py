@@ -131,7 +131,7 @@ c1, c2, c3, c4 = st.columns(4)
 with c1:
     st.metric(
         "📦 Materials",
-        len(df)
+        len(master_df)
     )
 
 with c2:
