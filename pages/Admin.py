@@ -170,17 +170,28 @@ with c4:
 # LOAD DATA
 # ==========================
 
-users = pd.read_excel(
-    USERS_FILE,
-    dtype=str
-).fillna("")
+# ==========================
+# LOAD DATA FROM GOOGLE SHEETS
+# ==========================
 
-master = pd.read_excel(
-    MASTER_FILE
+master_ws = sheet.worksheet("Master")
+master_df = pd.DataFrame(
+    master_ws.get_all_records()
 )
 
-logs = pd.read_excel(
-    LOG_FILE
+users_ws = sheet.worksheet("users")
+users_df = pd.DataFrame(
+    users_ws.get_all_records()
+)
+
+logs_ws = sheet.worksheet("logs")
+logs_df = pd.DataFrame(
+    logs_ws.get_all_records()
+)
+
+config_ws = sheet.worksheet("Config")
+config_df = pd.DataFrame(
+    config_ws.get_all_records()
 )
 
 # ==========================
