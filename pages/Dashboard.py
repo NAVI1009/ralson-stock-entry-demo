@@ -57,6 +57,9 @@ with st.sidebar:
 
     if st.button("📦 Dashboard", use_container_width=True):
         st.switch_page("pages/Dashboard.py")
+    if st.session_state.user["userid"] == "ADMIN001":
+        if st.button("⚙️ Admin", use_container_width=True):
+            st.switch_page("pages/Admin.py")
 
     if st.button("📜 History", use_container_width=True):
         st.switch_page("pages/History.py")
