@@ -389,8 +389,8 @@ if st.button(
     st.success("Stock Updated Successfully")
 
     st.rerun() 
-
-        st.markdown(f"""
+    
+    st.markdown(f"""
                     <div style="
                     background:#1E293B;
                     padding:20px;
