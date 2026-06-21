@@ -388,7 +388,7 @@ if st.button(
 
     st.success("Stock Updated Successfully")
 
-    st.rerun() ==========================
+    st.rerun() 
 
         st.markdown(f"""
                     <div style="
