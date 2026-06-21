@@ -92,7 +92,9 @@ st.set_page_config(
 # CREATE LOG FILE IF MISSING
 # ==========================
 
-
+MATERIAL_COLUMN = config_df.loc[0, "material_column"]
+CODE_COLUMN = config_df.loc[0, "code_column"]
+STOCK_COLUMN = config_df.loc[0, "stock_column"]
 
 # ==========================
 # HEADER CARD
