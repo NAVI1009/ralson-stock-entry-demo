@@ -330,26 +330,28 @@ if selected:
     # UPDATE BUTTON
     # ==========================
 
-  if st.button(
-      "✅ Update Stock",
-      use_container_width=True
-  ):
-      idx = df[
-      df[CODE_COLUMN] == code
-      ].index[0]
-      old_stock = df.loc[
-      idx,
-      STOCK_COLUMN
-    ]
-      if pd.isna(old_stock):
-          old_stock = 0
-          
-          df.loc[
-          idx,
-          STOCK_COLUMN
-          ] = new_stock
+if st.button(
+    "✅ Update Stock",
+    use_container_width=True
+):
 
-    # Save Master sheet
+    idx = df[
+        df[CODE_COLUMN] == code
+    ].index[0]
+
+    old_stock = df.loc[
+        idx,
+        STOCK_COLUMN
+    ]
+
+    if pd.isna(old_stock):
+        old_stock = 0
+
+    df.loc[
+        idx,
+        STOCK_COLUMN
+    ] = new_stock
+
     from gspread_dataframe import set_with_dataframe
 
     set_with_dataframe(
@@ -357,12 +359,10 @@ if selected:
         df
     )
 
-    # Refresh logs
     logs_df = pd.DataFrame(
         logs_ws.get_all_records()
     )
 
-    # Add log entry
     new_log = pd.DataFrame([
         {
             "datetime": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
@@ -385,7 +385,10 @@ if selected:
         logs_ws,
         logs_df
     )
-        # ==========================
+
+    st.success("Stock Updated Successfully")
+
+    st.rerun() ==========================
 
         st.markdown(f"""
                     <div style="
