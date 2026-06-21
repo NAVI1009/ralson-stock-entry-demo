@@ -334,24 +334,20 @@ if selected:
       "✅ Update Stock",
       use_container_width=True
   ):
-
-    idx = df[
-        df[CODE_COLUMN] == code
-    ].index[0]
-
-    old_stock = df.loc[
-        idx,
-        STOCK_COLUMN
+      idx = df[
+      df[CODE_COLUMN] == code
+      ].index[0]
+      old_stock = df.loc[
+      idx,
+      STOCK_COLUMN
     ]
-
-    if pd.isna(old_stock):
-        old_stock = 0
-
-    # Update dataframe
-    df.loc[
-        idx,
-        STOCK_COLUMN
-    ] = new_stock
+      if pd.isna(old_stock):
+          old_stock = 0
+          
+          df.loc[
+          idx,
+          STOCK_COLUMN
+          ] = new_stock
 
     # Save Master sheet
     from gspread_dataframe import set_with_dataframe
