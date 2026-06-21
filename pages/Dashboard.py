@@ -148,17 +148,17 @@ config_df = pd.DataFrame(
 
 MATERIAL_COLUMN = config_df.loc[
     0,
-    "material_column"
+    "MATERIAL_COLUMN"
 ]
 
 CODE_COLUMN = config_df.loc[
     0,
-    "code_column"
+    "CODE_COLUMN"
 ]
 
 STOCK_COLUMN = config_df.loc[
     0,
-    "stock_column"
+    "STOCK_COLUMN"
 ]
 # ==========================
 # SEARCH MATERIAL
