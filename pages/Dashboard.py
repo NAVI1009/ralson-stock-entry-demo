@@ -194,11 +194,10 @@ MATERIAL_COLUMN = "Material Description"
 
 CODE_COLUMN = "Code"
 
-STOCK_COLUMN = config.loc[
+STOCK_COLUMN = config_df.loc[
     0,
     "stock_column"
 ]
-
 # ==========================
 # SEARCH MATERIAL
 # ==========================
