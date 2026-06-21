@@ -263,7 +263,7 @@ st.subheader("🗑️ Delete User")
 
 user_to_delete = st.selectbox(
     "Select User",
-    users["userid"]
+    users_df["userid"]
     .tolist()
 )
 
@@ -305,7 +305,7 @@ st.subheader("🔒 Reset Password")
 
 reset_user = st.selectbox(
     "Select User For Password Reset",
-    users["userid"]
+    users_df["userid"]
     .tolist(),
     key="reset"
 )
@@ -320,21 +320,24 @@ if st.button(
     use_container_width=True
 ):
 
-    idx = users[
-        users["userid"]
+    idx = users_df[
+        users_df["userid"]
         ==
         reset_user
     ].index[0]
 
-    users.loc[
+    users_df.loc[
         idx,
         "password"
     ] = new_password
 
-    users.to_excel(
-        USERS_FILE,
-        index=False
-    )
+    users_ws.clear()
+
+users_ws.update(
+    [users_df.columns.tolist()]
+    +
+    users_df.values.tolist()
+)
 
     st.success(
         "Password Reset Successfully"
@@ -343,52 +346,7 @@ if st.button(
 # ==========================
 # DOWNLOAD FILES
 # ==========================
-
 st.divider()
-
-st.subheader("📥 Downloads")
-
-col1, col2, col3 = st.columns(3)
-
-with col1:
-
-    with open(
-        USERS_FILE,
-        "rb"
-    ) as f:
-
-        st.download_button(
-            "Download Users",
-            f,
-            file_name="users.xlsx"
-        )
-
-with col2:
-
-    with open(
-        MASTER_FILE,
-        "rb"
-    ) as f:
-
-        st.download_button(
-            "Download Stock",
-            f,
-            file_name="master.xlsx"
-        )
-
-with col3:
-
-    with open(
-        LOG_FILE,
-        "rb"
-    ) as f:
-
-        st.download_button(
-            "Download Logs",
-            f,
-            file_name="logs.xlsx"
-        )
-        st.divider()
 
 st.subheader("⚙️ Column Configuration")
 
@@ -400,19 +358,52 @@ master_df = pd.DataFrame(
 
 columns = master_df.columns.tolist()
 
+config_ws = sheet.worksheet("Config")
+
+config_df = pd.DataFrame(
+    config_ws.get_all_records()
+)
+
+current_material = (
+    config_df.loc[0, "material_column"]
+    if "material_column" in config_df.columns
+    else columns[0]
+)
+
+current_code = (
+    config_df.loc[0, "code_column"]
+    if "code_column" in config_df.columns
+    else columns[0]
+)
+
+current_stock = (
+    config_df.loc[0, "stock_column"]
+    if "stock_column" in config_df.columns
+    else columns[0]
+)
+
 material_column = st.selectbox(
-    "Material Column",
-    columns
+    "Material Description Column",
+    columns,
+    index=columns.index(current_material)
+    if current_material in columns
+    else 0
 )
 
 code_column = st.selectbox(
     "Code Column",
-    columns
+    columns,
+    index=columns.index(current_code)
+    if current_code in columns
+    else 0
 )
 
 stock_column = st.selectbox(
     "Stock Column",
-    columns
+    columns,
+    index=columns.index(current_stock)
+    if current_stock in columns
+    else 0
 )
 
 if st.button(
@@ -420,14 +411,9 @@ if st.button(
     use_container_width=True
 ):
 
-    config_ws = sheet.worksheet(
-        "Config"
-    )
-
     config_ws.clear()
 
     config_ws.update(
-        "A1:C2",
         [
             [
                 "material_column",
@@ -443,5 +429,7 @@ if st.button(
     )
 
     st.success(
-        "Configuration Saved"
+        "Configuration Saved Successfully"
     )
+
+    st.rerun()
