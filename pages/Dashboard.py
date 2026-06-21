@@ -38,7 +38,7 @@ import pandas as pd
 
 sheet = client.open_by_key(SHEET_ID)
 
-stock_ws = sheet.worksheet("13 GT")
+stock_ws = sheet.worksheet("Master")
 
 records = stock_ws.get_all_records()
 
