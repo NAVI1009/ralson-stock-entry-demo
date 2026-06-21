@@ -331,9 +331,9 @@ if selected:
     # ==========================
 
   if st.button(
-    "✅ Update Stock",
-    use_container_width=True
-):
+      "✅ Update Stock",
+      use_container_width=True
+  ):
 
     idx = df[
         df[CODE_COLUMN] == code
