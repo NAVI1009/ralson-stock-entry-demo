@@ -164,10 +164,7 @@ df.columns = (
     .astype(str)
     .str.strip()
 )
-st.metric(
-        "⚙️ Admins",
-        admin_count
-    )
+
 
 selected = st.selectbox(
     "🔍 Search and Select Material",
