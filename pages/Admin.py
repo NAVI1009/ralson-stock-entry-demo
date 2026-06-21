@@ -338,8 +338,7 @@ users_ws.update(
     +
     users_df.values.tolist()
 )
-
-    st.success(
+st.success(
         "Password Reset Successfully"
     )
 
