@@ -147,7 +147,7 @@ config_df = pd.DataFrame(
 )
 
 MATERIAL_COLUMN = str(
-    config_df.loc[0, "material_column"]
+    config_df.loc[0, "Material_column"]
 ).strip()
 
 CODE_COLUMN = str(
