@@ -29,9 +29,6 @@ if not st.session_state.logged_in:
 if "user" not in st.session_state:
     st.switch_page("app_4.py")
 
-MASTER_FILE = "master.xlsx"
-LOG_FILE = "logs.xlsx"
-
 from google_sheets import client
 from config import SHEET_ID
 import pandas as pd
@@ -43,13 +40,6 @@ stock_ws = sheet.worksheet("Master")
 records = stock_ws.get_all_records()
 
 df = pd.DataFrame(records)
-
-st.write(df.head())
-
-try:
-    logs_df = pd.read_excel(LOG_FILE)
-except:
-    logs_df = pd.DataFrame()
 
 with st.sidebar:
 
@@ -73,25 +63,38 @@ with st.sidebar:
 
     if st.button("👤 Profile", use_container_width=True):
         st.switch_page("pages/Profile.py")
-    if (
+if (
     st.session_state.user["userid"]
     ==
     "ADMIN001"
 ):
-        if st.button(
+    if st.button(
         "⚙️ Admin",
         use_container_width=True
     ):
-            st.switch_page(
+        st.switch_page(
             "pages/Admin.py"
         )
-        st.switch_page(
-        "pages/Admin.py"
-    )
-
     st.divider()
 st.divider()
-st.subheader("🕒 Recent Activity")
+if (
+    st.session_state.user["userid"]
+    ==
+    "ADMIN001"
+):
+
+    st.divider()
+
+    st.subheader(
+        "🕒 Recent Activity"
+    )
+
+    recent = logs_df.tail(10)
+
+    st.dataframe(
+        recent,
+        use_container_width=True
+    )
 if len(logs_df) > 0:
     recent = logs_df.tail(10)
 
@@ -132,23 +135,7 @@ st.set_page_config(
 # CREATE LOG FILE IF MISSING
 # ==========================
 
-if not os.path.exists(LOG_FILE):
 
-    pd.DataFrame(
-        columns=[
-            "datetime",
-            "userid",
-            "name",
-            "department",
-            "code",
-            "material",
-            "old_stock",
-            "new_stock"
-        ]
-    ).to_excel(
-        LOG_FILE,
-        index=False
-    )
 
 # ==========================
 # HEADER CARD
@@ -179,23 +166,33 @@ st.markdown(
 # LOAD MASTER FILE
 # ==========================
 
-df = pd.read_excel(MASTER_FILE)
-users_df = pd.read_excel(
-    "users.xlsx",
-    dtype=str
-).fillna("")
+sheet = client.open_by_key(SHEET_ID)
 
-logs_df = pd.read_excel(
-    LOG_FILE
+master_ws = sheet.worksheet("Master")
+
+df = pd.DataFrame(
+    master_ws.get_all_records()
+)
+users_ws = sheet.worksheet("users")
+
+users_df = pd.DataFrame(
+    users_ws.get_all_records()
 )
 
-config = pd.read_excel(
-    "config (1).xlsx"
+logs_ws = sheet.worksheet("logs")
+
+logs_df = pd.DataFrame(
+    logs_ws.get_all_records()
 )
 
-MASTER_FILE = config.loc[
+config_ws = sheet.worksheet("Config")
+
+config_df = pd.DataFrame(
+    config_ws.get_all_records()
+)
+STOCK_COLUMN = config_df.loc[
     0,
-    "excel_file"
+    "stock_column"
 ]
 
 MATERIAL_COLUMN = "Material Description"
@@ -333,73 +330,65 @@ if selected:
     # UPDATE BUTTON
     # ==========================
 
-    if st.button(
-        "✅ Update Stock",
-        use_container_width=True
-    ):
+  if st.button(
+    "✅ Update Stock",
+    use_container_width=True
+):
 
-        idx = df[
-            df[CODE_COLUMN]
-            ==
-            code
-        ].index[0]
+    idx = df[
+        df[CODE_COLUMN] == code
+    ].index[0]
 
-        old_stock = df.loc[
-            idx,
-            STOCK_COLUMN
-        ]
+    old_stock = df.loc[
+        idx,
+        STOCK_COLUMN
+    ]
 
-        if pd.isna(old_stock):
-            old_stock = 0
+    if pd.isna(old_stock):
+        old_stock = 0
 
-        df.loc[
-            idx,
-            STOCK_COLUMN
-        ] = new_stock
+    # Update dataframe
+    df.loc[
+        idx,
+        STOCK_COLUMN
+    ] = new_stock
 
-        df.to_excel(
-            MASTER_FILE,
-            index=False
-        )
+    # Save Master sheet
+    from gspread_dataframe import set_with_dataframe
 
-        logs = pd.read_excel(
-            LOG_FILE
-        )
+    set_with_dataframe(
+        master_ws,
+        df
+    )
 
-        logs.loc[
-            len(logs)
-        ] = [
+    # Refresh logs
+    logs_df = pd.DataFrame(
+        logs_ws.get_all_records()
+    )
 
-            datetime.now(),
+    # Add log entry
+    new_log = pd.DataFrame([
+        {
+            "datetime": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            "userid": st.session_state.user["userid"],
+            "name": st.session_state.user["name"],
+            "department": st.session_state.user["department"],
+            "code": code,
+            "material": selected,
+            "old_stock": old_stock,
+            "new_stock": new_stock
+        }
+    ])
 
-            st.session_state.user[
-                "userid"
-            ],
+    logs_df = pd.concat(
+        [logs_df, new_log],
+        ignore_index=True
+    )
 
-            st.session_state.user[
-                "name"
-            ],
-
-            st.session_state.user[
-                "department"
-            ],
-
-            code,
-
-            selected,
-
-            old_stock,
-
-            new_stock
-        ]
-
-        logs.to_excel(
-            LOG_FILE,
-            index=False
-        )
-
-        # ==========================
-        # SUCCESS CARD
+    set_with_dataframe(
+        logs_ws,
+        logs_df
+    )
         # ==========================
 
         st.markdown(f"""
