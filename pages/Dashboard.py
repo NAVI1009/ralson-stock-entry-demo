@@ -189,15 +189,6 @@ config_ws = sheet.worksheet("Config")
 config_df = pd.DataFrame(
     config_ws.get_all_records()
 )
-STOCK_COLUMN = config_df.loc[
-    0,
-    "stock_column"
-]
-config_ws = sheet.worksheet("Config")
-
-config_df = pd.DataFrame(
-    config_ws.get_all_records()
-)
 
 MATERIAL_COLUMN = "Material Description"
 
