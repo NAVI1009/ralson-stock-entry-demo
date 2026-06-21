@@ -32,7 +32,19 @@ if "user" not in st.session_state:
 MASTER_FILE = "master.xlsx"
 LOG_FILE = "logs.xlsx"
 
-df = pd.read_excel(MASTER_FILE)
+from google_sheets import client
+from config import SHEET_ID
+import pandas as pd
+
+sheet = client.open_by_key(SHEET_ID)
+
+stock_ws = sheet.worksheet("STOCK")
+
+records = stock_ws.get_all_records()
+
+df = pd.DataFrame(records)
+
+st.write(df.head())
 
 try:
     logs_df = pd.read_excel(LOG_FILE)
