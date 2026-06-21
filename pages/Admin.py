@@ -279,10 +279,9 @@ if st.button(
         )
 
     else:
-
-    users_df = users_df[
+        users_df = users_df[
         users_df["userid"] != user_to_delete
-    ]
+        ]
 
     users_ws.clear()
 
