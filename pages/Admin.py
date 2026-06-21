@@ -235,12 +235,12 @@ search_user = st.text_input(
     "Search User ID"
 )
 
-filtered_users = users.copy()
+filtered_users = users_df.copy()
 
 if search_user:
 
-    filtered_users = users[
-        users["userid"]
+    filtered_users = users_df[
+        users_df["userid"]
         .str.contains(
             search_user,
             case=False,
@@ -280,22 +280,21 @@ if st.button(
 
     else:
 
-        users = users[
-            users["userid"]
-            !=
-            user_to_delete
-        ]
+    users_df = users_df[
+        users_df["userid"] != user_to_delete
+    ]
 
-        users.to_excel(
-            USERS_FILE,
-            index=False
-        )
+    users_ws.clear()
 
-        st.success(
-            "User Deleted"
-        )
+    users_ws.update(
+        [users_df.columns.values.tolist()]
+        +
+        users_df.values.tolist()
+    )
 
-        st.rerun()
+    st.success("User Deleted")
+
+    st.rerun()
 
 # ==========================
 # RESET PASSWORD
