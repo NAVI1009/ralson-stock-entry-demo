@@ -65,9 +65,9 @@ with st.sidebar:
         st.switch_page("pages/Profile.py")
     st.divider()
     if st.button("🚪 Logout", use_container_width=True):
-    st.session_state.logged_in = False
-    st.session_state.user = {}
-    st.switch_page("app_4.py")
+        st.session_state.logged_in = False
+        st.session_state.user = {}
+        st.switch_page("app_4.py")
 # ==========================
 # LOGIN CHECK
 # ==========================
