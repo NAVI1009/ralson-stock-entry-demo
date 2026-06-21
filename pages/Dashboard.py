@@ -3,6 +3,14 @@ import pandas as pd
 from datetime import datetime
 import os
 
+from google_sheets import client
+from config import SHEET_ID
+
+sheet = client.open_by_key(SHEET_ID)
+
+st.write(
+    sheet.title
+)
 st.markdown("""
 <style>
 [data-testid="stSidebarNav"] {
@@ -53,24 +61,44 @@ with st.sidebar:
 
     if st.button("👤 Profile", use_container_width=True):
         st.switch_page("pages/Profile.py")
-    if st.session_state.user["userid"] == "ADMIN001":
+    if (
+    st.session_state.user["userid"]
+    ==
+    "ADMIN001"
+):
         if st.button(
-         "⚙️ Admin",
-           use_container_width=True
-        ):
-            st.switch_page(
-                "pages/Admin.py"
-                )
-    st.divider()
-    if st.button(
-    "🚪 Logout",
-    use_container_width=True
+        "⚙️ Admin",
+        use_container_width=True
     ):
+            st.switch_page(
+            "pages/Admin.py"
+        )
+        st.switch_page(
+        "pages/Admin.py"
+    )
+
+    st.divider()
+st.divider()
+st.subheader("🕒 Recent Activity")
+if len(logs_df) > 0:
+    recent = logs_df.tail(10)
+
+    st.dataframe(
+        recent,
+        use_container_width=True
+    )
+
+else:
+
+    st.info(
+        "No activity found."
+    )
+if st.button("🚪 Logout", use_container_width=True):
+
         st.session_state.logged_in = False
         st.session_state.user = {}
-        st.switch_page(
-            "app_4.py"
-        )
+
+        st.switch_page("app_4.py")
 # ==========================
 # LOGIN CHECK
 # ==========================
@@ -149,31 +177,67 @@ logs_df = pd.read_excel(
     LOG_FILE
 )
 
-config = pd.read_excel("config (1).xlsx")
-
-MASTER_FILE = str(
-    config.loc[0, "excel_file"]
-).strip()
-
-STOCK_COLUMN = str(
-    config.loc[0, "stock_column"]
-).strip()
-
-df = pd.read_excel(MASTER_FILE)
-df.columns = (
-    df.columns
-    .astype(str)
-    .str.strip()
+config = pd.read_excel(
+    "config.xlsx"
 )
+
+MASTER_FILE = config.loc[
+    0,
+    "excel_file"
+]
+
+MATERIAL_COLUMN = "Material Description"
+
+CODE_COLUMN = "Code"
+
+STOCK_COLUMN = config.loc[
+    0,
+    "stock_column"
+]
 
 # ==========================
 # SEARCH MATERIAL
 # ==========================
+st.subheader("📊 Dashboard Overview")
 
+c1, c2, c3, c4 = st.columns(4)
+
+with c1:
+    st.metric(
+        "📦 Materials",
+        len(df)
+    )
+
+with c2:
+    st.metric(
+        "👥 Users",
+        len(users_df)
+    )
+
+with c3:
+    st.metric(
+        "📜 Updates",
+        len(logs_df)
+    )
+
+with c4:
+    admin_count = len(
+        users_df[
+            users_df["department"]
+            .str.upper()
+            ==
+            "ADMIN"
+        ]
+    )
+
+    st.metric(
+        "⚙️ Admins",
+        admin_count
+    )
 
 selected = st.selectbox(
     "🔍 Search and Select Material",
-    df["Material Description"]
+    df[MATERIAL_COLUMN]
     .astype(str)
     .tolist(),
     key="material_search"
@@ -186,12 +250,12 @@ selected = st.selectbox(
 if selected:
 
     row = df[
-        df["Material Description"]
+        df[MATERIAL_COLUMN]
         ==
         selected
     ].iloc[0]
 
-    code = row["Code"]
+    code = row[CODE_COLUMN]
 
     current_stock = row[STOCK_COLUMN]
 
@@ -263,7 +327,7 @@ if selected:
     ):
 
         idx = df[
-            df["Code"]
+            df[CODE_COLUMN]
             ==
             code
         ].index[0]
