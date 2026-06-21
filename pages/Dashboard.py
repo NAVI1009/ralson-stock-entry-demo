@@ -164,11 +164,7 @@ df.columns = (
     .astype(str)
     .str.strip()
 )
-# ==========================
-# SEARCH MATERIAL
-# ==========================
-
-    st.metric(
+st.metric(
         "⚙️ Admins",
         admin_count
     )
