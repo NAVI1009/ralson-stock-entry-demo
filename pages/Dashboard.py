@@ -64,7 +64,8 @@ with st.sidebar:
     if st.button("👤 Profile", use_container_width=True):
         st.switch_page("pages/Profile.py")
         
-if st.button("🚪 Logout", use_container_width=True):
+        st.divider()
+    if st.button("🚪 Logout", use_container_width=True):
 
         st.session_state.logged_in = False
         st.session_state.user = {}
