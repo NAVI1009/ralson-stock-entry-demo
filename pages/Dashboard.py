@@ -63,7 +63,8 @@ with st.sidebar:
 
     if st.button("👤 Profile", use_container_width=True):
         st.switch_page("pages/Profile.py")
-    if st.button("🚪 Logout", use_container_width=True):
+        
+if st.button("🚪 Logout", use_container_width=True):
 
         st.session_state.logged_in = False
         st.session_state.user = {}
@@ -166,37 +167,6 @@ df.columns = (
 # ==========================
 # SEARCH MATERIAL
 # ==========================
-st.subheader("📊 Dashboard Overview")
-
-c1, c2, c3, c4 = st.columns(4)
-
-with c1:
-    st.metric(
-        "📦 Materials",
-        len(df)
-    )
-
-with c2:
-    st.metric(
-        "👥 Users",
-        len(users_df)
-    )
-
-with c3:
-    st.metric(
-        "📜 Updates",
-        len(logs_df)
-    )
-
-with c4:
-    admin_count = len(
-        users_df[
-            users_df["Department"]
-            .str.upper()
-            ==
-            "ADMIN"
-        ]
-    )
 
     st.metric(
         "⚙️ Admins",
