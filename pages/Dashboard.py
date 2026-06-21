@@ -85,16 +85,15 @@ if (
 
     st.divider()
 
-    st.subheader(
-        "🕒 Recent Activity"
-    )
+    st.subheader("🕒 Recent Activity")
 
-    recent = logs_df.tail(10)
-
-    st.dataframe(
-        recent,
-        use_container_width=True
+try:
+    logs_df = pd.DataFrame(
+        logs_ws.get_all_records()
     )
+except:
+    logs_df = pd.DataFrame()
+
 if len(logs_df) > 0:
     recent = logs_df.tail(10)
 
