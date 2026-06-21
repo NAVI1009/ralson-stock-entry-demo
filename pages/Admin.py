@@ -80,6 +80,27 @@ with st.sidebar:
     )
 
     st.divider()
+    
+with st.sidebar:
+
+    st.markdown("## 🏭 Ralson")
+
+    st.markdown(
+        f"""
+        👤 **{st.session_state.user['name']}**
+
+        🏢 {st.session_state.user['department']}
+        """
+    )
+
+    st.divider()
+
+    if st.button("📦 Dashboard", use_container_width=True):
+        st.switch_page("pages/Dashboard.py")
+
+    if st.session_state.user["userid"] == "ADMIN001":
+        if st.button("⚙️ Admin", use_container_width=True):
+            st.switch_page("pages/Admin.py")
 
     if st.button("📜 History", use_container_width=True):
         st.switch_page("pages/History.py")
@@ -87,16 +108,11 @@ with st.sidebar:
     if st.button("👤 Profile", use_container_width=True):
         st.switch_page("pages/Profile.py")
 
-    if st.button("⚙️ Admin", use_container_width=True):
-        st.rerun()
-
     st.divider()
 
     if st.button("🚪 Logout", use_container_width=True):
-
         st.session_state.logged_in = False
         st.session_state.user = {}
-
         st.switch_page("app_4.py")
 
 # ==========================
