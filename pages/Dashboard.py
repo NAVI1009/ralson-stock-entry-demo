@@ -63,51 +63,7 @@ with st.sidebar:
 
     if st.button("👤 Profile", use_container_width=True):
         st.switch_page("pages/Profile.py")
-if (
-    st.session_state.user["userid"]
-    ==
-    "ADMIN001"
-):
-    if st.button(
-        "⚙️ Admin",
-        use_container_width=True
-    ):
-        st.switch_page(
-            "pages/Admin.py"
-        )
-    st.divider()
-st.divider()
-if (
-    st.session_state.user["userid"]
-    ==
-    "ADMIN001"
-):
-
-    st.divider()
-
-    st.subheader("🕒 Recent Activity")
-
-try:
-    logs_df = pd.DataFrame(
-        logs_ws.get_all_records()
-    )
-except:
-    logs_df = pd.DataFrame()
-
-if len(logs_df) > 0:
-    recent = logs_df.tail(10)
-
-    st.dataframe(
-        recent,
-        use_container_width=True
-    )
-
-else:
-
-    st.info(
-        "No activity found."
-    )
-if st.button("🚪 Logout", use_container_width=True):
+    if st.button("🚪 Logout", use_container_width=True):
 
         st.session_state.logged_in = False
         st.session_state.user = {}
@@ -190,9 +146,15 @@ config_df = pd.DataFrame(
     config_ws.get_all_records()
 )
 
-MATERIAL_COLUMN = "Material Description"
+MATERIAL_COLUMN = config_df.loc[
+    0,
+    "material_column"
+]
 
-CODE_COLUMN = "Code"
+CODE_COLUMN = config_df.loc[
+    0,
+    "code_column"
+]
 
 STOCK_COLUMN = config_df.loc[
     0,
@@ -412,3 +374,23 @@ if st.button(
                     """,
                     unsafe_allow_html=True
                 )
+if (
+    st.session_state.user["userid"]
+    ==
+    "ADMIN001"
+):
+
+    st.divider()
+
+    st.subheader(
+        "🕒 Recent Activity"
+    )
+
+    logs_df = pd.DataFrame(
+        logs_ws.get_all_records()
+    )
+
+    st.dataframe(
+        logs_df.tail(20),
+        use_container_width=True
+    )
