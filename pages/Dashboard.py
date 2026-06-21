@@ -226,7 +226,7 @@ with c3:
 with c4:
     admin_count = len(
         users_df[
-            users_df["department"]
+            users_df["Department"]
             .str.upper()
             ==
             "ADMIN"
