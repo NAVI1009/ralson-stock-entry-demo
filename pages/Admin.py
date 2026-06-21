@@ -1,6 +1,10 @@
 import streamlit as st
 import pandas as pd
 import os
+from google_sheets import client
+from config import SHEET_ID
+
+sheet = client.open_by_key(SHEET_ID)
 config_ws = sheet.worksheet("Config")
 
 config_df = pd.DataFrame(
