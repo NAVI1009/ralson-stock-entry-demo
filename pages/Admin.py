@@ -305,7 +305,7 @@ st.subheader("🔒 Reset Password")
 
 reset_user = st.selectbox(
     "Select User For Password Reset",
-    users_df["userid"]
+    users_df["UserID"]
     .tolist(),
     key="reset"
 )
@@ -321,7 +321,7 @@ if st.button(
 ):
 
     idx = users_df[
-        users_df["userid"]
+        users_df["UserID"]
         ==
         reset_user
     ].index[0]
