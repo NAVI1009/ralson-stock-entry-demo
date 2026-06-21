@@ -146,20 +146,23 @@ config_df = pd.DataFrame(
     config_ws.get_all_records()
 )
 
-MATERIAL_COLUMN = config_df.loc[
-    0,
-    "MATERIAL_COLUMN"
-]
+MATERIAL_COLUMN = str(
+    config_df.loc[0, "material_column"]
+).strip()
 
-CODE_COLUMN = config_df.loc[
-    0,
-    "CODE_COLUMN"
-]
+CODE_COLUMN = str(
+    config_df.loc[0, "code_column"]
+).strip()
 
-STOCK_COLUMN = config_df.loc[
-    0,
-    "STOCK_COLUMN"
-]
+STOCK_COLUMN = str(
+    config_df.loc[0, "stock_column"]
+).strip()
+
+df.columns = (
+    df.columns
+    .astype(str)
+    .str.strip()
+)
 # ==========================
 # SEARCH MATERIAL
 # ==========================
