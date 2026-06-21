@@ -1,10 +1,18 @@
 import streamlit as st
 import pandas as pd
 import os
+config_ws = sheet.worksheet("Config")
 
-USERS_FILE = "users.xlsx"
-MASTER_FILE = "master.xlsx"
-LOG_FILE = "logs.xlsx"
+config_df = pd.DataFrame(
+    config_ws.get_all_records()
+)
+
+master_ws = sheet.worksheet("Master")
+
+master_df = pd.DataFrame(
+    master_ws.get_all_records()
+)
+
 if (
     st.session_state.user["userid"]
     !=
@@ -312,73 +320,29 @@ with col3:
         )
         st.divider()
 
-st.subheader("⚙️ Stock Database Configuration")
+st.subheader("⚙️ Column Configuration")
 
-import os
+master_ws = sheet.worksheet("Master")
 
-excel_files = [
-    f for f in os.listdir(".")
-    if f.endswith(".xlsx")
-    and f not in [
-        "users.xlsx",
-        "logs.xlsx",
-        "config.xlsx"
-    ]
-]
-
-config = pd.read_excel("config (1).xlsx")
-
-current_file = config.loc[0, "excel_file"]
-st.subheader("📤 Upload New Stock File")
-
-uploaded_file = st.file_uploader(
-    "Upload Excel File",
-    type=["xlsx"]
+master_df = pd.DataFrame(
+    master_ws.get_all_records()
 )
 
-if uploaded_file is not None:
+columns = master_df.columns.tolist()
 
-    with open(
-        uploaded_file.name,
-        "wb"
-    ) as f:
-
-        f.write(
-            uploaded_file.getbuffer()
-        )
-
-    st.success(
-        f"{uploaded_file.name} uploaded successfully"
-    )
-
-    st.rerun()
-
-selected_file = st.selectbox(
-    "Select Stock Excel File",
-    excel_files,
-    index=excel_files.index(current_file)
-    if current_file in excel_files
-    else 0
+material_column = st.selectbox(
+    "Material Column",
+    columns
 )
 
-temp_df = pd.read_excel(selected_file)
+code_column = st.selectbox(
+    "Code Column",
+    columns
+)
 
-available_columns = [
-    col for col in temp_df.columns
-    if col not in [
-        "Code",
-        "Material Description"
-    ]
-]
-
-current_column = config.loc[0, "stock_column"]
-
-selected_column = st.selectbox(
-    "Select Stock Column",
-    available_columns,
-    index=available_columns.index(current_column)
-    if current_column in available_columns
-    else 0
+stock_column = st.selectbox(
+    "Stock Column",
+    columns
 )
 
 if st.button(
@@ -386,26 +350,28 @@ if st.button(
     use_container_width=True
 ):
 
-    config.loc[0, "excel_file"] = selected_file
-    config.loc[0, "stock_column"] = selected_column
+    config_ws = sheet.worksheet(
+        "Config"
+    )
 
-    config.to_excel(
-        "config.xlsx",
-        index=False
+    config_ws.clear()
+
+    config_ws.update(
+        "A1:C2",
+        [
+            [
+                "material_column",
+                "code_column",
+                "stock_column"
+            ],
+            [
+                material_column,
+                code_column,
+                stock_column
+            ]
+        ]
     )
 
     st.success(
-        "Configuration Saved Successfully"
+        "Configuration Saved"
     )
-# ==========================
-# RECENT ACTIVITY
-# ==========================
-
-st.divider()
-
-st.subheader("🕒 Recent Activity")
-
-st.dataframe(
-    logs.tail(20),
-    use_container_width=True
-)
