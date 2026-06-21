@@ -206,21 +206,21 @@ with c1:
 
     st.metric(
         "Users",
-        len(users)
+        len(users_df)
     )
 
 with c2:
 
     st.metric(
         "Materials",
-        len(master)
+        len(master_df)
     )
 
 with c3:
 
     st.metric(
         "Stock Updates",
-        len(logs)
+        len(logs_df)
     )
 
 st.divider()
