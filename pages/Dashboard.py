@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 from datetime import datetime
 import os
+from gspread_dataframe import get_as_dataframe
 
 from google_sheets import client
 from config import SHEET_ID
