@@ -153,6 +153,8 @@ config_ws = sheet.worksheet("Config")
 config_df = pd.DataFrame(
     config_ws.get_all_records()
 )
+st.write("Columns Found:")
+st.write(df.columns.tolist())
 MATERIAL_COLUMN = "Material Description"
 CODE_COLUMN = "Code"
 STOCK_COLUMN = "13 GT"
