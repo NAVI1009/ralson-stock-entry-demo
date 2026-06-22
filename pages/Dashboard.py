@@ -195,7 +195,16 @@ if selected:
 if pd.isna(current_stock):
     current_stock = 0
 
-current_stock = int(current_stock)
+try:
+    current_stock = int(float(current_stock))
+except:
+    current_stock = 0
+
+new_stock = st.number_input(
+    "Enter Stock",
+    value=current_stock,
+    min_value=0
+)
     if pd.isna(current_stock):
         current_stock = 0
 
@@ -245,16 +254,7 @@ current_stock = int(current_stock)
     # ==========================
     # STOCK ENTRY
     # ========================= 
-    current_stock = pd.to_numeric(
-        current_stock,
-errors="coerce"
-)
-
-if pd.isna(current_stock):
-    current_stock = 0
-
-current_stock = int(current_stock)
-
+    
     new_stock = st.number_input(
         "📦 Enter Updated Stock",
         min_value=0,
