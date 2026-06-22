@@ -91,6 +91,9 @@ st.set_page_config(
 # ==========================
 # CREATE LOG FILE IF MISSING
 # ==========================
+config_df = get_as_dataframe(
+    sheet.worksheet("CONFIG")
+).dropna(how="all")
 
 MATERIAL_COLUMN = config_df.loc[0, "material_column"]
 CODE_COLUMN = config_df.loc[0, "code_column"]
