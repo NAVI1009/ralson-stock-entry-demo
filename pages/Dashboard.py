@@ -244,7 +244,16 @@ current_stock = int(current_stock)
 
     # ==========================
     # STOCK ENTRY
-    # ==========================
+    # ========================= 
+    current_stock = pd.to_numeric(
+        current_stock,
+errors="coerce"
+)
+
+if pd.isna(current_stock):
+    current_stock = 0
+
+current_stock = int(current_stock)
 
     new_stock = st.number_input(
         "📦 Enter Updated Stock",
