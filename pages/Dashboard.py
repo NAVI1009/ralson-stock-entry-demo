@@ -95,9 +95,9 @@ config_df = get_as_dataframe(
     sheet.worksheet("CONFIG")
 ).dropna(how="all")
 
-MATERIAL_COLUMN = config_df.loc[0, "material_column"]
-CODE_COLUMN = config_df.loc[0, "code_column"]
-STOCK_COLUMN = config_df.loc[0, "stock_column"]
+MATERIAL_COLUMN = "Material description"
+CODE_COLUMN = "Code"
+STOCK_COLUMN = "13 GT"
 
 # ==========================
 # HEADER CARD
