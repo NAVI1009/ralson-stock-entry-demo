@@ -187,8 +187,15 @@ if selected:
 
     code = row[CODE_COLUMN]
 
-    current_stock = row[STOCK_COLUMN]
+    current_stock = pd.to_numeric(
+    current_stock,
+    errors="coerce"
+)
 
+if pd.isna(current_stock):
+    current_stock = 0
+
+current_stock = int(current_stock)
     if pd.isna(current_stock):
         current_stock = 0
 
