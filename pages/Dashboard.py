@@ -153,19 +153,9 @@ config_ws = sheet.worksheet("Config")
 config_df = pd.DataFrame(
     config_ws.get_all_records()
 )
-
-MATERIAL_COLUMN = str(
-    config_df.loc[0, "Material_column"]
-).strip()
-
-CODE_COLUMN = str(
-    config_df.loc[0, "code_column"]
-).strip()
-
-STOCK_COLUMN = str(
-    config_df.loc[0, "stock_column"]
-).strip()
-
+MATERIAL_COLUMN = "Material Description"
+CODE_COLUMN = "Code"
+STOCK_COLUMN = "13 GT"
 df.columns = (
     df.columns
     .astype(str)
