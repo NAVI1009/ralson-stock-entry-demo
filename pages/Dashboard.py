@@ -93,7 +93,7 @@ st.set_page_config(
 # CREATE LOG FILE IF MISSING
 # ==========================
 config_df = get_as_dataframe(
-    sheet.worksheet("CONFIG")
+    sheet.worksheet("Config")
 ).dropna(how="all")
 
 MATERIAL_COLUMN = "Material description"
