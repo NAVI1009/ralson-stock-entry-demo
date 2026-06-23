@@ -191,7 +191,6 @@ if selected:
     current_stock,
     errors="coerce"
 )
-
 if pd.isna(current_stock):
     current_stock = 0
 
