@@ -234,7 +234,7 @@ if pd.isna(current_stock):
             """,
             unsafe_allow_html=True
         )
-    st.write("")
+			st.write("")
 
     # ==========================
     # STOCK ENTRY
