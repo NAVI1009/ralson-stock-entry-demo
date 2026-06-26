@@ -196,7 +196,7 @@ new_stock = st.number_input(
 )
 if pd.isna(current_stock):
 	current_stock = 0
-	col1, col2 = st.columns(2)
+col1, col2 = st.columns(2)
 with col1:
 	st.markdown(
             f"""
