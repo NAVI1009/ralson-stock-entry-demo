@@ -1,11 +1,18 @@
 import streamlit as st
-import pandas as pd
 from datetime import datetime
 import os
 from gspread_dataframe import get_as_dataframe
-
 from google_sheets import client
 from config import SHEET_ID
+import pandas as pd
+
+
+st.set_page_config(
+    page_title="Dashboard",
+    page_icon="📦",
+    layout="wide"
+)
+
 
 sheet = client.open_by_key(SHEET_ID)
 
@@ -29,10 +36,6 @@ if not st.session_state.logged_in:
 
 if "user" not in st.session_state:
     st.switch_page("app_4.py")
-
-from google_sheets import client
-from config import SHEET_ID
-import pandas as pd
 
 sheet = client.open_by_key(SHEET_ID)
 
@@ -83,11 +86,6 @@ if not st.session_state.get("logged_in", False):
 # PAGE CONFIG
 # ==========================
 
-st.set_page_config(
-    page_title="Dashboard",
-    page_icon="📦",
-    layout="wide"
-)
 
 # ==========================
 # CREATE LOG FILE IF MISSING
@@ -186,19 +184,11 @@ if selected:
     ].iloc[0]
 
     code = row[CODE_COLUMN]
-
-    current_stock = pd.to_numeric(
-    current_stock,
-    errors="coerce"
+	current_stock = row[STOCK_COLUMN]
+current_stock = pd.to_numeric(
+	current_stock,
+	errors="coerce"
 )
-if pd.isna(current_stock):
-    current_stock = 0
-
-try:
-    current_stock = int(float(current_stock))
-except:
-    current_stock = 0
-
 new_stock = st.number_input(
     "Enter Stock",
     value=current_stock,
@@ -225,7 +215,7 @@ if pd.isna(current_stock):
             """,
             unsafe_allow_html=True
         )
-        with col2:
+   with col2:
         st.markdown(
             f"""
             <div style="
