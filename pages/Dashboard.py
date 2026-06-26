@@ -240,13 +240,12 @@ if pd.isna(current_stock):
     # STOCK ENTRY
     # ========================= 
     
-    new_stock = st.number_input(
-        "📦 Enter Updated Stock",
-        min_value=0,
-        value=int(current_stock),
-        step=1,
-        key="stock_input"
-    )
+    new_stock = st.number_input("📦 Enter Updated Stock",
+		min_value=0,
+		value=int(current_stock),
+		step=1,
+		key="stock_input"
+	)
 
     # ==========================
     # UPDATE BUTTON
