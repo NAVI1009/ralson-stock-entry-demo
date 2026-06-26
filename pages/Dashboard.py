@@ -184,18 +184,17 @@ if selected:
     ].iloc[0]
 
     code = row[CODE_COLUMN]
-current_stock = row[STOCK_COLUMN]
-current_stock = pd.to_numeric(
-	current_stock,
-	errors="coerce"
-)
-new_stock = st.number_input(
-    "Enter Stock",
-    value=current_stock,
-    min_value=0
-)
+current_stock = row.get(STOCK_COLUMN, 0)
+
+if current_stock in ["", None]:
+    current_stock = 0
+
+current_stock = pd.to_numeric(current_stock, errors="coerce")
+
 if pd.isna(current_stock):
-	current_stock = 0
+    current_stock = 0
+
+current_stock = int(current_stock)
 col1, col2 = st.columns(2)
 with col1:
 	st.markdown(
