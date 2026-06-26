@@ -214,8 +214,8 @@ if pd.isna(current_stock):
             """,
             unsafe_allow_html=True
         )
-   with col2:
-        st.markdown(
+		with col2:
+			st.markdown(
             f"""
             <div style="
             background:#0F172A;
