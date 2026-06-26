@@ -240,12 +240,12 @@ with col2:
     # STOCK ENTRY
     # ========================= 
     
-new_stock = st.number_input("
-📦 Enter Updated Stock",
-min_value=0,
-value=int(current_stock),
-step=1,
-key="stock_input"
+new_stock = st.number_input(
+	"📦 Enter Updated Stock",
+	min_value=0,
+	value=int(current_stock),
+	step=1,
+	key="stock_input"
 )
 
     # ==========================
