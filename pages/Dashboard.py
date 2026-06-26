@@ -184,7 +184,7 @@ if selected:
     ].iloc[0]
 
     code = row[CODE_COLUMN]
-	current_stock = row[STOCK_COLUMN]
+current_stock = row[STOCK_COLUMN]
 current_stock = pd.to_numeric(
 	current_stock,
 	errors="coerce"
