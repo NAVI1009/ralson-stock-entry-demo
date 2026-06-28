@@ -502,11 +502,9 @@ with right:
             st.session_state.page = "register"
 
             st.rerun()
-
-    st.markdown("</div>", unsafe_allow_html=True)
-elif st.session_state.page == "register":
-
-        st.markdown("""
+            st.markdown("</div>", unsafe_allow_html=True)
+        elif st.session_state.page == "register":
+            st.markdown("""
         <h2 style="
         text-align:center;
         color:#005BAC;
