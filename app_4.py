@@ -265,9 +265,8 @@ with right:
     # LOGIN PAGE
     # ============================================
 
-   left, centre, right = st.columns([1,3,1])
+left, centre, right = st.columns([1,3,1])
 with centre:
-
     userid = st.text_input(
         "👤 User ID",
         placeholder="Enter User ID"
@@ -285,20 +284,18 @@ with centre:
 
         c1, c2 = st.columns(2)
 
-        with c1:
+    with c1:
+        login_btn = st.button(
+            "🟢 Login",
+            use_container_width=True,
+            type="primary"
+        )
 
-            login_btn = st.button(
-                "🟢 Login",
-                use_container_width=True,
-                type="primary"
-            )
-
-        with c2:
-
-            register_btn = st.button(
-                "🔵 Register",
-                use_container_width=True
-            )
+    with c2:
+        register_btn = st.button(
+            "🔵 Register",
+            use_container_width=True
+        )
 
         forgot_btn = st.button(
             "🔷 Forgot Password?",
