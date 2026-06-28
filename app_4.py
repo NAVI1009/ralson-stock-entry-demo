@@ -23,219 +23,227 @@ st.set_page_config(
 st.markdown("""
 <style>
 
-/* Hide Streamlit */
+/* ==========================================
+   HIDE STREAMLIT
+========================================== */
 
-#MainMenu{
-visibility:hidden;
-}
-
-footer{
-visibility:hidden;
-}
-
+#MainMenu,
+footer,
 header{
-visibility:hidden;
+    visibility:hidden;
 }
 
-[data-testid="stSidebar"]{
-display:none;
-}
-
+[data-testid="stSidebar"],
 [data-testid="stSidebarNav"]{
-display:none;
+    display:none;
 }
 
-/* Background */
+/* ==========================================
+   PAGE
+========================================== */
 
 .stApp{
 
-background:#F4F7FB;
+    background:#F4F7FB;
 
-background-image:
-linear-gradient(rgba(0,91,172,.05) 1px, transparent 1px),
-linear-gradient(90deg, rgba(0,91,172,.05) 1px, transparent 1px);
+    background-image:
+    linear-gradient(rgba(0,91,172,.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,91,172,.05) 1px, transparent 1px);
 
-background-size:45px 45px;
+    background-size:45px 45px;
 
 }
-
-/* Main */
 
 .block-container{
 
-padding-top:30px;
+    max-width:1450px;
 
-max-width:1450px;
-
-}
-
-/* Inputs */
-
-.stTextInput input{
-
-height:60px !important;
-
-border-radius:18px !important;
-
-border:2px solid #D1D5DB !important;
-
-font-size:18px !important;
-
-padding-left:18px !important;
-
-background:white !important;
-
-color:black !important;
-
-box-shadow:0 4px 12px rgba(0,0,0,.08);
-
-}
-input[type="password"]{
-
-height:60px !important;
-
-border-radius:18px !important;
-
-font-size:18px !important;
+    padding-top:30px;
 
 }
 
-.stTextInput input:focus{
+/* ==========================================
+   HEADINGS
+========================================== */
 
-border:2px solid #005BAC;
+h1,h2,h3,h4{
+
+    color:#005BAC;
+
+    font-family:'Segoe UI';
+
+    font-weight:700;
 
 }
 
-/* Select */
+/* ==========================================
+   LABELS
+========================================== */
 
-.stSelectbox div{
+label{
 
-border-radius:12px;
+    color:#1F2937 !important;
+
+    font-weight:600 !important;
+
+    font-size:17px !important;
 
 }
 
-/* Buttons */
+/* ==========================================
+   TEXT INPUT
+========================================== */
+
+.stTextInput>div>div>input{
+
+    background:white !important;
+
+    color:black !important;
+
+    border:2px solid #CBD5E1 !important;
+
+    border-radius:18px !important;
+
+    font-size:18px !important;
+
+    padding:14px 18px !important;
+
+    height:60px !important;
+
+    box-shadow:0 3px 10px rgba(0,0,0,.08);
+
+}
+
+.stTextInput>div>div>input:focus{
+
+    border:2px solid #2563EB !important;
+
+    box-shadow:0 0 10px rgba(37,99,235,.30);
+
+}
+
+/* Placeholder */
+
+.stTextInput input::placeholder{
+
+    color:#9CA3AF !important;
+
+}
+
+/* ==========================================
+   PASSWORD
+========================================== */
+
+input[type=password]{
+
+    border-radius:18px !important;
+
+}
+
+/* ==========================================
+   CHECKBOX
+========================================== */
+
+.stCheckbox label{
+
+    color:black !important;
+
+    font-size:18px !important;
+
+    font-weight:600 !important;
+
+}
+
+/* ==========================================
+   BUTTONS
+========================================== */
 
 .stButton>button{
 
-height:52px;
+    height:58px !important;
 
-border-radius:14px;
+    border-radius:18px !important;
 
-font-size:17px;
+    border:none !important;
 
-font-weight:700;
+    font-size:18px !important;
 
-border:none;
+    font-weight:700 !important;
 
-transition:.3s;
-
-background:#D71920;
-
-color:white;
+    transition:.25s;
 
 }
 
 .stButton>button:hover{
 
-background:#B91218;
-
-transform:translateY(-2px);
+    transform:translateY(-2px);
 
 }
 
-/* LOGIN BUTTON */
+/* ==========================================
+   SUCCESS
+========================================== */
 
-div[data-testid="column"]:nth-of-type(1) button{
+.stSuccess{
 
-background:#22C55E !important;
-
-color:white !important;
-
-border:none !important;
-
-border-radius:18px !important;
-
-height:58px !important;
-
-font-size:20px !important;
-
-font-weight:700 !important;
+    border-radius:18px;
 
 }
 
-/* REGISTER BUTTON */
+/* ==========================================
+   ERROR
+========================================== */
 
-div[data-testid="column"]:nth-of-type(2) button{
+.stError{
 
-background:#3B82F6 !important;
-
-color:white !important;
-
-border:none !important;
-
-border-radius:18px !important;
-
-height:58px !important;
-
-font-size:20px !important;
-
-font-weight:700 !important;
-
-}
-/* FORGOT PASSWORD */
-
-button[kind="secondary"]{
-
-background:#3B82F6 !important;
-
-color:white !important;
-
-border:none !important;
-
-border-radius:18px !important;
-
-height:58px !important;
-
-font-size:20px !important;
-
-font-weight:700 !important;
-
-}
-/* CHECKBOX */
-
-.stCheckbox label{
-
-color:black !important;
-
-font-size:18px !important;
-
-font-weight:600 !important;
+    border-radius:18px;
 
 }
 
-/* Headings */
+/* ==========================================
+   INFO
+========================================== */
 
-h1,h2,h3,h4{
+.stInfo{
 
-font-family:Segoe UI;
-
-}
-div[data-testid="column"]:nth-of-type(1) .stButton>button{
-
-background:#D71920;
-
-color:white;
+    border-radius:18px;
 
 }
 
-div[data-testid="column"]:nth-of-type(2) .stButton>button{
+/* ==========================================
+   SELECTBOX
+========================================== */
 
-background:#111827;
+.stSelectbox div{
 
-color:white;
+    border-radius:18px !important;
 
 }
+
+/* ==========================================
+   NUMBER INPUT
+========================================== */
+
+.stNumberInput input{
+
+    border-radius:18px !important;
+
+    height:60px !important;
+
+}
+
+/* ==========================================
+   DATAFRAME
+========================================== */
+
+.stDataFrame{
+
+    border-radius:18px;
+
+    overflow:hidden;
+
+}
+
 </style>
 """, unsafe_allow_html=True)
 
