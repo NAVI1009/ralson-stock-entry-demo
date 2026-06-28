@@ -124,12 +124,20 @@ with col2:
 st.markdown("---")
 with st.sidebar:
 
-    st.title("🏭 Ralson")
+    st.markdown("# 🏭 Ralson")
 
-    st.write(f"**{st.session_state.user['name']}**")
-    st.caption(st.session_state.user["department"])
+    st.markdown("---")
 
-    st.divider()
+    st.markdown(
+        f"""
+### 👤 {st.session_state.user["name"]}
+
+**User ID:** {st.session_state.user["userid"]}
+
+**Department:** {st.session_state.user["department"]}
+"""
+    )
+
 
     if st.button("📦 Dashboard", use_container_width=True):
         st.switch_page("pages/Dashboard.py")
