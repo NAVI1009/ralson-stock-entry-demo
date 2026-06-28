@@ -1,434 +1,426 @@
 import streamlit as st
 import pandas as pd
-import os
+
 from google_sheets import client
 from config import SHEET_ID
-sheet = client.open_by_key(SHEET_ID)
-config_ws = sheet.worksheet("Config")
 
-users_ws = sheet.worksheet("users")
-users_df = pd.DataFrame(
-    users_ws.get_all_records()
-)
-
-logs_ws = sheet.worksheet("logs")
-logs_df = pd.DataFrame(
-    logs_ws.get_all_records()
-)
-
-config_df = pd.DataFrame(
-    config_ws.get_all_records()
-)
-
-master_ws = sheet.worksheet("Master")
-
-master_df = pd.DataFrame(
-    master_ws.get_all_records()
-)
-
-if (
-    st.session_state.user["userid"]
-    !=
-    "ADMIN001"
-):
-
-    st.error(
-        "⛔ Access Denied"
-    )
-
-    st.stop()
-# ==========================
+# ======================================
 # LOGIN CHECK
-# ==========================
+# ======================================
 
 if not st.session_state.get("logged_in", False):
     st.switch_page("app_4.py")
 
-# ==========================
-# ADMIN CHECK
-# ==========================
-
 if st.session_state.user["userid"] != "ADMIN001":
-
-    st.error("⛔ Access Denied")
-
+    st.error("Unauthorized Access")
     st.stop()
 
-# ==========================
+# ======================================
 # PAGE CONFIG
-# ==========================
+# ======================================
 
 st.set_page_config(
-    page_title="Admin Panel",
-    page_icon="⚙️",
+    page_title="Admin",
+    page_icon="⚙",
     layout="wide"
 )
 
-# ==========================
-# HIDE STREAMLIT NAV
-# ==========================
-
 st.markdown("""
 <style>
-[data-testid="stSidebarNav"] {
+[data-testid="stSidebarNav"]{
 display:none;
 }
 </style>
 """, unsafe_allow_html=True)
 
-# ==========================
-# SIDEBAR
-# ==========================
+# ======================================
+# GOOGLE SHEETS
+# ======================================
 
-with st.sidebar:
-
-    st.markdown("## 🏭 Ralson")
-
-    st.markdown(
-        f"""
-        👤 **{st.session_state.user['name']}**
-
-        🏢 {st.session_state.user['department']}
-        """
-    )
-
-    st.divider()
-    
-with st.sidebar:
-
-    st.markdown("## 🏭 Ralson")
-
-    st.markdown(
-        f"""
-        👤 **{st.session_state.user['name']}**
-
-        🏢 {st.session_state.user['department']}
-        """
-    )
-
-    st.divider()
-
-    if st.button("📦 Dashboard", use_container_width=True):
-        st.switch_page("pages/Dashboard.py")
-
-
-    if st.button("⚙️ Admin", use_container_width=True):
-            st.switch_page("pages/Admin.py")
-
-    if st.button("📜 History", use_container_width=True):
-        st.switch_page("pages/History.py")
-
-    if st.button("👤 Profile", use_container_width=True):
-        st.switch_page("pages/Profile.py")
-
-    st.divider()
-
-    if st.button("🚪 Logout", use_container_width=True):
-        st.session_state.logged_in = False
-        st.session_state.user = {}
-        st.switch_page("app_4.py")
-
-# ==========================
-# HEADER
-# ==========================
-
-st.title("⚙️ Admin Panel")
-st.subheader("📊 Dashboard Overview")
-
-c1, c2, c3, c4 = st.columns(4)
-
-with c1:
-    st.metric(
-        "📦 Materials",
-        len(master_df)
-    )
-
-with c2:
-    st.metric(
-        "👥 Users",
-        len(users_df)
-    )
-
-with c3:
-    st.metric(
-        "📜 Updates",
-        len(logs_df)
-    )
-
-with c4:
-    admin_count = len(
-        users_df[
-            users_df["Department"]
-            .str.upper()
-            ==
-            "ADMIN"
-        ]
-    )
-
-
-# ==========================
-# LOAD DATA
-# ==========================
-
-# ==========================
-# LOAD DATA FROM GOOGLE SHEETS
-# ==========================
+sheet = client.open_by_key(SHEET_ID)
 
 master_ws = sheet.worksheet("Master")
-master_df = pd.DataFrame(
-    master_ws.get_all_records()
-)
-
 users_ws = sheet.worksheet("users")
-users_df = pd.DataFrame(
-    users_ws.get_all_records()
-)
-
 logs_ws = sheet.worksheet("logs")
-logs_df = pd.DataFrame(
-    logs_ws.get_all_records()
+
+master_df = pd.DataFrame(master_ws.get_all_records())
+users_df = pd.DataFrame(users_ws.get_all_records())
+logs_df = pd.DataFrame(logs_ws.get_all_records())
+# ======================================
+# SIDEBAR
+# ======================================
+
+with st.sidebar:
+
+    st.image("ralson_logo.png", width=170)
+
+    st.markdown("## 🏭 Ralson PPC")
+
+    st.write(f"**👤 {st.session_state.user['name']}**")
+    st.write(f"**ID :** {st.session_state.user['userid']}")
+    st.write(f"**Department :** {st.session_state.user['department']}")
+    st.write(f"**Role :** Admin")
+
+    st.divider()
+
+    if st.button(
+        "📦 Dashboard",
+        use_container_width=True
+    ):
+        st.switch_page("pages/Dashboard.py")
+
+    if st.button(
+        "📜 History",
+        use_container_width=True
+    ):
+        st.switch_page("pages/History.py")
+
+    if st.button(
+        "👤 Profile",
+        use_container_width=True
+    ):
+        st.switch_page("pages/Profile.py")
+
+    st.button(
+        "⚙ Admin",
+        use_container_width=True,
+        disabled=True
+    )
+
+    st.divider()
+
+    if st.button(
+        "🚪 Logout",
+        use_container_width=True
+    ):
+
+        st.session_state.logged_in = False
+        st.session_state.user = {}
+
+        st.switch_page("app_4.py")
+
+# ======================================
+# PAGE HEADER
+# ======================================
+
+st.title("⚙ Admin Panel")
+
+st.caption(
+    "Manage users, master stock sheet and system activity."
 )
 
-config_ws = sheet.worksheet("Config")
-config_df = pd.DataFrame(
-    config_ws.get_all_records()
-)
+st.divider()
 
-# ==========================
-# DASHBOARD STATS
-# ==========================
-
-st.subheader("📊 Summary")
+# ======================================
+# SUMMARY CARDS
+# ======================================
 
 c1, c2, c3 = st.columns(3)
 
 with c1:
 
     st.metric(
-        "Users",
+        "👥 Total Users",
         len(users_df)
     )
 
 with c2:
 
     st.metric(
-        "Materials",
+        "📦 Materials",
         len(master_df)
     )
 
 with c3:
 
     st.metric(
-        "Stock Updates",
+        "📜 Total Updates",
         len(logs_df)
     )
 
 st.divider()
+# ======================================
+# MASTER SHEET MANAGEMENT
+# ======================================
 
-# ==========================
-# USER SEARCH
-# ==========================
+st.subheader("📂 Master Sheet")
+
+col1, col2 = st.columns([2,1])
+
+with col1:
+
+    uploaded_file = st.file_uploader(
+        "Upload New Master Excel File",
+        type=["xlsx"]
+    )
+
+    if uploaded_file is not None:
+
+        try:
+
+            new_master = pd.read_excel(uploaded_file)
+
+            if st.button(
+                "✅ Replace Master Sheet",
+                use_container_width=True
+            ):
+
+                master_ws.clear()
+
+                master_ws.update(
+                    [new_master.columns.tolist()]
+                    +
+                    new_master.values.tolist()
+                )
+
+                st.success(
+                    "Master Sheet Updated Successfully."
+                )
+
+                st.balloons()
+
+                st.rerun()
+
+        except Exception as e:
+
+            st.error(e)
+
+with col2:
+
+    st.info(
+        f"""
+### Current Data
+
+📦 Materials
+
+**{len(master_df)}**
+
+"""
+    )
+
+st.divider()
+
+# ======================================
+# DOWNLOAD LOGS
+# ======================================
+
+st.subheader("📥 Download System Logs")
+
+csv = logs_df.to_csv(
+    index=False
+).encode("utf-8")
+
+st.download_button(
+
+    "📜 Download Logs",
+
+    csv,
+
+    file_name="ralson_logs.csv",
+
+    mime="text/csv",
+
+    use_container_width=True
+
+)
+
+st.divider()
+# ======================================
+# USER MANAGEMENT
+# ======================================
 
 st.subheader("👥 User Management")
 
-search_user = st.text_input(
-    "Search User ID"
-)
+if users_df.empty:
 
-filtered_users = users_df.copy()
+    st.warning("No users available.")
 
-if search_user:
+else:
 
-    filtered_users = users_df[
-        users_df["userid"]
-        .str.contains(
-            search_user,
-            case=False,
-            na=False
-        )
-    ]
-
-st.dataframe(
-    filtered_users,
-    use_container_width=True
-)
-
-# ==========================
-# DELETE USER
-# ==========================
-
-st.divider()
-
-st.subheader("🗑️ Delete User")
-
-user_to_delete = st.selectbox(
-    "Select User",
-    users_df["UserID"]
-    .tolist()
-)
-
-if st.button(
-    "Delete User",
-    use_container_width=True
-):
-
-    if user_to_delete == "ADMIN001":
-
-        st.error(
-            "Admin cannot be deleted"
-        )
-
-    else:
-        users_df = users_df[
-        users_df["userid"] != user_to_delete
-        ]
-
-    users_ws.clear()
-
-    users_ws.update(
-        [users_df.columns.values.tolist()]
-        +
-        users_df.values.tolist()
+    st.dataframe(
+        users_df,
+        use_container_width=True,
+        hide_index=True
     )
 
-    st.success("User Deleted")
+st.write("")
 
-    st.rerun()
+# ======================================
+# DELETE USER
+# ======================================
 
-# ==========================
-# RESET PASSWORD
-# ==========================
+st.subheader("🗑 Delete User")
+
+user_list = users_df["UserId"].astype(str).tolist()
+
+selected_user = st.selectbox(
+    "Select User",
+    user_list
+)
+
+c1, c2 = st.columns(2)
+
+with c1:
+
+    if st.button(
+        "🗑 Delete User",
+        use_container_width=True
+    ):
+
+        if selected_user == "ADMIN001":
+
+            st.error(
+                "Admin account cannot be deleted."
+            )
+
+        else:
+
+            users_df = users_df[
+                users_df["UserId"] != selected_user
+            ]
+
+            users_ws.clear()
+
+            users_ws.update(
+                [users_df.columns.tolist()]
+                +
+                users_df.values.tolist()
+            )
+
+            st.success(
+                "User Deleted Successfully."
+            )
+
+            st.rerun()
+
+with c2:
+
+    if st.button(
+        "🔄 Refresh Users",
+        use_container_width=True
+    ):
+
+        st.rerun()
 
 st.divider()
 
-st.subheader("🔒 Reset Password")
+# ======================================
+# SYSTEM INFORMATION
+# ======================================
 
-reset_user = st.selectbox(
-    "Select User For Password Reset",
-    users_df["UserID"]
-    .tolist(),
-    key="reset"
-)
+st.subheader("📊 System Information")
+
+col1, col2 = st.columns(2)
+
+with col1:
+
+    st.info(f"""
+### 📦 Master Sheet
+
+Rows : **{len(master_df)}**
+
+Columns : **{len(master_df.columns)}**
+""")
+
+with col2:
+
+    st.info(f"""
+### 👥 Users
+
+Registered : **{len(users_df)}**
+
+Logs : **{len(logs_df)}**
+""")
+# ======================================
+# ADD NEW USER
+# ======================================
+
+st.divider()
+
+st.subheader("➕ Add New User")
+
+col1, col2 = st.columns(2)
+
+with col1:
+
+    new_userid = st.text_input(
+        "User ID"
+    ).strip().upper()
+
+    new_name = st.text_input(
+        "Employee Name"
+    )
+
+with col2:
+
+    new_department = st.text_input(
+        "Department"
+    )
+
+    new_role = st.selectbox(
+        "Role",
+        [
+            "Operator",
+            "Supervisor",
+            "Manager",
+            "Admin"
+        ]
+    )
 
 new_password = st.text_input(
-    "New Password",
+    "Password",
     type="password"
 )
 
 if st.button(
-    "Reset Password",
+    "➕ Add User",
     use_container_width=True
 ):
 
-    idx = users_df[
-        users_df["UserID"]
-        ==
-        reset_user
-    ].index[0]
+    if (
+        new_userid == ""
+        or new_name == ""
+        or new_department == ""
+        or new_password == ""
+    ):
 
-    users_df.loc[
-        idx,
-        "password"
-    ] = new_password
+        st.error("Please fill all fields.")
 
-    users_ws.clear()
+    elif new_userid in users_df["UserId"].astype(str).tolist():
 
-users_ws.update(
-    [users_df.columns.tolist()]
-    +
-    users_df.values.tolist()
-)
-st.success(
-        "Password Reset Successfully"
-    )
+        st.error("User ID already exists.")
 
-# ==========================
-# DOWNLOAD FILES
-# ==========================
-st.divider()
+    else:
 
-st.subheader("⚙️ Column Configuration")
+        new_row = pd.DataFrame([{
 
-master_ws = sheet.worksheet("Master")
+            "UserId": new_userid,
 
-master_df = pd.DataFrame(
-    master_ws.get_all_records()
-)
+            "Name": new_name,
 
-columns = master_df.columns.tolist()
+            "Department": new_department,
 
-config_ws = sheet.worksheet("Config")
+            "Role": new_role,
 
-config_df = pd.DataFrame(
-    config_ws.get_all_records()
-)
+            "Password": new_password
 
-current_material = (
-    config_df.loc[0, "material_column"]
-    if "material_column" in config_df.columns
-    else columns[0]
-)
+        }])
 
-current_code = (
-    config_df.loc[0, "code_column"]
-    if "code_column" in config_df.columns
-    else columns[0]
-)
+        users_df = pd.concat(
+            [users_df, new_row],
+            ignore_index=True
+        )
 
-current_stock = (
-    config_df.loc[0, "stock_column"]
-    if "stock_column" in config_df.columns
-    else columns[0]
-)
+        users_ws.clear()
 
-material_column = st.selectbox(
-    "Material Description Column",
-    columns,
-    index=columns.index(current_material)
-    if current_material in columns
-    else 0
-)
+        users_ws.update(
+            [users_df.columns.tolist()]
+            +
+            users_df.values.tolist()
+        )
 
-code_column = st.selectbox(
-    "Code Column",
-    columns,
-    index=columns.index(current_code)
-    if current_code in columns
-    else 0
-)
+        st.success("User Added Successfully.")
 
-stock_column = st.selectbox(
-    "Stock Column",
-    columns,
-    index=columns.index(current_stock)
-    if current_stock in columns
-    else 0
-)
+        st.balloons()
 
-if st.button(
-    "💾 Save Configuration",
-    use_container_width=True
-):
-
-    config_ws.clear()
-
-    config_ws.update(
-        [
-            [
-                "material_column",
-                "code_column",
-                "stock_column"
-            ],
-            [
-                material_column,
-                code_column,
-                stock_column
-            ]
-        ]
-    )
-
-    st.success(
-        "Configuration Saved Successfully"
-    )
-
-    st.rerun()
+        st.rerun()
