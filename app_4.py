@@ -44,16 +44,9 @@ header{
 
 .stApp{
 
-    background:#F4F7FB;
-
-    background-image:
-    linear-gradient(rgba(0,91,172,.05) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0,91,172,.05) 1px, transparent 1px);
-
-    background-size:45px 45px;
+background:#F7F8FC;
 
 }
-
 .block-container{
 
     max-width:1450px;
@@ -100,7 +93,7 @@ label{
 
     color:black !important;
 
-    border:2px solid #CBD5E1 !important;
+    border:1px solid #D1D5DB;
 
     border-radius:18px !important;
 
@@ -110,7 +103,7 @@ label{
 
     height:60px !important;
 
-    box-shadow:0 3px 10px rgba(0,0,0,.08);
+    box-shadow:none;
 
 }
 
