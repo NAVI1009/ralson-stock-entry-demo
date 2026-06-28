@@ -205,44 +205,28 @@ with right:
     Login to access the PPC Stock Portal
     </p>
     """, unsafe_allow_html=True)
-
-    # ============================================
-    # LOGIN PAGE
-    # ============================================
-
-userid = st.text_input("👤 User ID")
-
-password = st.text_input(
+    userid = st.text_input("👤 User ID")
+    password = st.text_input(
     "🔒 Password",
     type="password"
-)
-
-remember = st.checkbox("Remember Me")
-
-c1, c2 = st.columns(2)
-
-with c1:
+    )
+    remember = st.checkbox("Remember Me")
+    c1, c2 = st.columns(2)
+    with c1:
     login_btn = st.button(
         "Login",
         use_container_width=True
     )
-
-with c2:
+    with c2:
     register_btn = st.button(
         "Register",
         use_container_width=True
     )
-
-forgot_btn = st.button(
+    forgot_btn = st.button(
     "Forgot Password?",
     use_container_width=True
-)
-
-        # ============================================
-        # LOGIN LOGIC
-        # ============================================
-
-        if login_btn:
+    )
+    if login_btn:
 
             user = users[
                 users["UserId"]
