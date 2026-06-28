@@ -23,90 +23,35 @@ st.set_page_config(
 st.markdown("""
 <style>
 
-/* USER ID + PASSWORD BOX */
+/* Hide Streamlit */
 
-.stTextInput > div{
-
-    background:#1E293B !important;
-
-    border:1px solid #334155 !important;
-
-    border-radius:18px !important;
-
-    padding:4px !important;
-
-    box-shadow:0 6px 20px rgba(0,0,0,.25);
-
+#MainMenu,
+footer,
+header{
+visibility:hidden;
 }
 
-.stTextInput > div:focus-within{
-
-    border:1px solid #22C55E !important;
-
-    box-shadow:0 0 12px rgba(34,197,94,.35);
-
+[data-testid="stSidebarNav"]{
+display:none;
 }
 
-/* Actual input */
+/* Background */
 
-.stTextInput input{
-
-    background:transparent !important;
-
-    border:none !important;
-
-    outline:none !important;
-
-    color:white !important;
-
-    font-size:20px !important;
-
-    height:58px !important;
-
-    padding-left:16px !important;
-
-    box-shadow:none !important;
-
+.stApp{
+background:#111827;
 }
 
-/* Placeholder */
+/* Page */
 
-.stTextInput input::placeholder{
-
-    color:#94A3B8 !important;
-
+.block-container{
+padding-top:20px;
+max-width:1400px;
 }
 
-/* Password eye */
+/* Text */
 
-[data-testid="stTextInput"] button{
-
-    background:transparent !important;
-
-    border:none !important;
-
-    color:#CBD5E1 !important;
-
-}
-
-/* Remove Streamlit borders */
-
-[data-baseweb="base-input"]{
-
-    border:none !important;
-
-    background:transparent !important;
-
-}
-
-[data-baseweb="input"]{
-
-    border:none !important;
-
-    background:#1E293B !important;
-
-    border-radius:18px !important;
-
+h1,h2,h3,h4,label,p{
+color:white !important;
 }
 
 </style>
@@ -265,40 +210,33 @@ with right:
     # LOGIN PAGE
     # ============================================
 
-left, centre, right = st.columns([1,3,1])
-with centre:
-    userid = st.text_input(
-        "👤 User ID",
-        placeholder="Enter User ID"
+userid = st.text_input("👤 User ID")
+
+password = st.text_input(
+    "🔒 Password",
+    type="password"
+)
+
+remember = st.checkbox("Remember Me")
+
+c1, c2 = st.columns(2)
+
+with c1:
+    login_btn = st.button(
+        "Login",
+        use_container_width=True
     )
 
-    password = st.text_input(
-        "🔒 Password",
-        type="password",
-        placeholder="Enter Password"
+with c2:
+    register_btn = st.button(
+        "Register",
+        use_container_width=True
     )
 
-    remember = st.checkbox("Remember Me")
-    st.write("")
-    c1, c2 = st.columns(2)
-
-    with c1:
-        login_btn = st.button(
-            "🟢 Login",
-            use_container_width=True,
-            type="primary"
-        )
-
-    with c2:
-        register_btn = st.button(
-            "🔵 Register",
-            use_container_width=True
-        )
-
-        forgot_btn = st.button(
-            "🔷 Forgot Password?",
-            use_container_width=True
-        )
+forgot_btn = st.button(
+    "Forgot Password?",
+    use_container_width=True
+)
 
         # ============================================
         # LOGIN LOGIC
