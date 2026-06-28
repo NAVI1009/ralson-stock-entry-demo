@@ -1,22 +1,13 @@
-
 import streamlit as st
 import pandas as pd
 import time
 
-st.markdown("""
-<style>
-[data-testid="stSidebarNav"] {
-    display: none;
-}
-</style>
-""", unsafe_allow_html=True)
-st.markdown("""
-<style>
-[data-testid="stSidebar"] {
-    display:none;
-}
-</style>
-""", unsafe_allow_html=True)
+from google_sheets import client
+from config import SHEET_ID, USERS_SHEET
+
+# ==========================================
+# PAGE CONFIG
+# ==========================================
 
 st.set_page_config(
     page_title="Ralson Stock Management",
@@ -24,11 +15,22 @@ st.set_page_config(
     layout="wide"
 )
 
-USERS_FILE = "users.xlsx"
+# Hide Streamlit navigation/sidebar
+st.markdown("""
+<style>
+[data-testid="stSidebarNav"]{
+display:none;
+}
 
-# ======================
+[data-testid="stSidebar"]{
+display:none;
+}
+</style>
+""", unsafe_allow_html=True)
+
+# ==========================================
 # SESSION VARIABLES
-# ======================
+# ==========================================
 
 if "page" not in st.session_state:
     st.session_state.page = "login"
@@ -42,40 +44,84 @@ if "user" not in st.session_state:
 if "reset_user" not in st.session_state:
     st.session_state.reset_user = ""
 
-# ======================
+# ==========================================
+# CONNECT TO GOOGLE SHEETS
+# ==========================================
+
+sheet = client.open_by_key(SHEET_ID)
+
+users_ws = sheet.worksheet(USERS_SHEET)
+
+# ==========================================
 # LOAD USERS
-# ======================
+# ==========================================
 
-users = pd.read_excel(
-    USERS_FILE,
-    dtype=str
-).fillna("")
+@st.cache_data(ttl=30)
+def load_users():
 
-# ======================
+    df = pd.DataFrame(
+        users_ws.get_all_records()
+    )
+
+    df.columns = (
+        df.columns
+        .astype(str)
+        .str.strip()
+    )
+
+    return df
+
+users = load_users()
+# ==========================================
 # LOGIN PAGE
-# ======================
+# ==========================================
 
 st.markdown(
     """
-    <h1 style='text-align:center;color:#005BAC;'>
+    <div style="
+    text-align:center;
+    padding:20px;
+    ">
+
+    <h1 style="color:#005BAC;">
     🏭 RALSON STOCK MANAGEMENT
     </h1>
+
+    <h4>
+    Production Planning & Control
+    </h4>
+
+    </div>
     """,
     unsafe_allow_html=True
 )
 
-# LOGIN SCREEN
+# ==========================================
+# LOGIN
+# ==========================================
 
 if st.session_state.page == "login":
 
-    userid = st.text_input("User ID")
+    st.subheader("Login")
+
+    userid = st.text_input(
+        "User ID"
+    ).strip().upper()
 
     password = st.text_input(
         "Password",
         type="password"
     )
 
+    remember = st.checkbox(
+        "Remember Me"
+    )
+
     col1, col2 = st.columns(2)
+
+    # ==========================
+    # LOGIN BUTTON
+    # ==========================
 
     with col1:
 
@@ -84,33 +130,59 @@ if st.session_state.page == "login":
             use_container_width=True
         ):
 
-            row = users[
-                users["userid"]
+            user = users[
+                users["UserId"]
+                .astype(str)
                 .str.upper()
                 ==
-                userid.upper()
+                userid
             ]
 
-            if row.empty:
+            if user.empty:
 
                 st.error(
-                    "User Not Found"
+                    "❌ User ID not found."
                 )
-
-            elif password == row.iloc[0]["password"]:
-                st.session_state.logged_in = True
-                st.session_state.user = {
-                    "userid": row.iloc[0]["userid"],
-                    "name": row.iloc[0]["name"],
-                    "department": row.iloc[0]["department"]
-                }
-                st.switch_page("pages/Dashboard.py")
 
             else:
 
-                st.error(
-                    "Wrong Password"
-                )
+                user = user.iloc[0]
+
+                if password != str(user["Password"]):
+
+                    st.error(
+                        "❌ Incorrect Password."
+                    )
+
+                else:
+
+                    st.session_state.logged_in = True
+
+                    st.session_state.user = {
+
+                        "userid": user["UserId"],
+
+                        "name": user["Name"],
+
+                        "department": user["Department"],
+
+                        "role": user["Role"]
+
+                    }
+
+                    st.success(
+                        f"Welcome {user['Name']}!"
+                    )
+
+                    time.sleep(1)
+
+                    st.switch_page(
+                        "pages/Dashboard.py"
+                    )
+
+    # ==========================
+    # REGISTER BUTTON
+    # ==========================
 
     with col2:
 
@@ -133,27 +205,33 @@ if st.session_state.page == "login":
         st.session_state.page = "forgot"
 
         st.rerun()
-
-# ======================
+        # ==========================================
 # REGISTER PAGE
-# ======================
+# ==========================================
 
 elif st.session_state.page == "register":
 
-    st.subheader(
-        "👤 New User Registration"
-    )
+    st.subheader("👤 New User Registration")
 
     userid = st.text_input(
         "User ID"
-    )
+    ).strip().upper()
 
     name = st.text_input(
-        "Name"
-    )
+        "Full Name"
+    ).strip()
 
     department = st.text_input(
         "Department"
+    ).strip()
+
+    role = st.selectbox(
+        "Role",
+        [
+            "Operator",
+            "Supervisor",
+            "Manager"
+        ]
     )
 
     password = st.text_input(
@@ -166,129 +244,176 @@ elif st.session_state.page == "register":
         type="password"
     )
 
-    if st.button(
-        "Create Account"
-    ):
+    col1, col2 = st.columns(2)
 
-        existing = users[
-            users["userid"]
-            .str.upper()
-            ==
-            userid.upper()
-        ]
+    # ==========================================
+    # CREATE ACCOUNT
+    # ==========================================
 
-        if not existing.empty:
+    with col1:
 
-            st.error(
-                "User Already Exists"
-            )
+        if st.button(
+            "Create Account",
+            use_container_width=True
+        ):
 
-        elif password != confirm:
+            users = load_users()
 
-            st.error(
-                "Passwords Do Not Match"
-            )
-
-        else:
-
-            users.loc[
-                len(users)
-            ] = [
-
-                userid.upper(),
-                name,
-                department,
-                password
+            existing = users[
+                users["UserId"]
+                .astype(str)
+                .str.upper()
+                ==
+                userid
             ]
 
-            users.to_excel(
-                USERS_FILE,
-                index=False
-            )
+            if userid == "":
 
-            st.success(
-                "Account Created Successfully"
-            )
+                st.error("Enter User ID")
 
-            time.sleep(2)
+            elif name == "":
+
+                st.error("Enter Name")
+
+            elif department == "":
+
+                st.error("Enter Department")
+
+            elif password == "":
+
+                st.error("Enter Password")
+
+            elif not existing.empty:
+
+                st.error(
+                    "User ID already exists."
+                )
+
+            elif password != confirm:
+
+                st.error(
+                    "Passwords do not match."
+                )
+
+            else:
+
+                users_ws.append_row(
+
+                    [
+                        userid,
+                        name,
+                        department,
+                        role,
+                        password
+                    ],
+
+                    value_input_option="USER_ENTERED"
+
+                )
+
+                load_users.clear()
+
+                st.success(
+                    "✅ Account Created Successfully"
+                )
+
+                time.sleep(2)
+
+                st.session_state.page = "login"
+
+                st.rerun()
+
+    # ==========================================
+    # BACK
+    # ==========================================
+
+    with col2:
+
+        if st.button(
+            "Back to Login",
+            use_container_width=True
+        ):
+
+            st.session_state.page = "login"
+
+            st.rerun()
+    # ==========================================
+# FORGOT PASSWORD
+# ==========================================
+
+elif st.session_state.page == "forgot":
+
+    st.subheader("🔑 Forgot Password")
+
+    userid = st.text_input(
+        "User ID"
+    ).strip().upper()
+
+    name = st.text_input(
+        "Full Name"
+    ).strip()
+
+    col1, col2 = st.columns(2)
+
+    with col1:
+
+        if st.button(
+            "Continue",
+            use_container_width=True
+        ):
+
+            users = load_users()
+
+            row = users[
+                (
+                    users["UserId"]
+                    .astype(str)
+                    .str.upper()
+                    ==
+                    userid
+                )
+                &
+                (
+                    users["Name"]
+                    .astype(str)
+                    .str.lower()
+                    ==
+                    name.lower()
+                )
+            ]
+
+            if row.empty:
+
+                st.error(
+                    "User ID or Name is incorrect."
+                )
+
+            else:
+
+                st.session_state.reset_user = userid
+
+                st.session_state.page = "reset"
+
+                st.rerun()
+
+    with col2:
+
+        if st.button(
+            "Back",
+            use_container_width=True
+        ):
 
             st.session_state.page = "login"
 
             st.rerun()
 
-    if st.button(
-        "Back To Login"
-    ):
-
-        st.session_state.page = "login"
-
-        st.rerun()
-
-# ======================
-# FORGOT PASSWORD PAGE
-# ======================
-
-elif st.session_state.page == "forgot":
-
-    st.subheader(
-        "🔑 Forgot Password"
-    )
-
-    userid = st.text_input(
-        "User ID"
-    )
-
-    name = st.text_input(
-        "Name"
-    )
-
-    if st.button(
-        "Continue"
-    ):
-
-        row = users[
-            (users["userid"]
-             .str.upper()
-             ==
-             userid.upper())
-            &
-            (users["name"]
-             .str.lower()
-             ==
-             name.lower())
-        ]
-
-        if row.empty:
-
-            st.error(
-                "Invalid User ID or Name"
-            )
-
-        else:
-
-            st.session_state.reset_user = userid
-
-            st.session_state.page = "reset"
-
-            st.rerun()
-
-    if st.button(
-        "Back"
-    ):
-
-        st.session_state.page = "login"
-
-        st.rerun()
-
-# ======================
-# RESET PASSWORD PAGE
-# ======================
+# ==========================================
+# RESET PASSWORD
+# ==========================================
 
 elif st.session_state.page == "reset":
 
-    st.subheader(
-        "🔒 Reset Password"
-    )
+    st.subheader("🔒 Reset Password")
 
     pwd1 = st.text_input(
         "New Password",
@@ -300,41 +425,74 @@ elif st.session_state.page == "reset":
         type="password"
     )
 
-    if st.button(
-        "Save Password"
-    ):
+    col1, col2 = st.columns(2)
 
-        if pwd1 != pwd2:
+    with col1:
 
-            st.error(
-                "Passwords Do Not Match"
-            )
+        if st.button(
+            "Save Password",
+            use_container_width=True
+        ):
 
-        else:
+            if pwd1 == "":
 
-            idx = users[
-                users["userid"]
-                .str.upper()
-                ==
-                st.session_state.reset_user.upper()
-            ].index[0]
+                st.error(
+                    "Password cannot be empty."
+                )
 
-            users.loc[
-                idx,
-                "password"
-            ] = pwd1
+            elif pwd1 != pwd2:
 
-            users.to_excel(
-                USERS_FILE,
-                index=False
-            )
+                st.error(
+                    "Passwords do not match."
+                )
 
-            st.success(
-                "Password Updated Successfully"
-            )
+            else:
 
-            time.sleep(2)
+                users = load_users()
+
+                idx = users[
+                    users["UserId"]
+                    .astype(str)
+                    .str.upper()
+                    ==
+                    st.session_state.reset_user
+                ].index[0]
+
+                users.loc[
+                    idx,
+                    "Password"
+                ] = pwd1
+
+                users_ws.clear()
+
+                users_ws.update(
+                    [users.columns.tolist()]
+                    +
+                    users.values.tolist()
+                )
+
+                load_users.clear()
+
+                st.success(
+                    "✅ Password Updated Successfully"
+                )
+
+                time.sleep(2)
+
+                st.session_state.page = "login"
+
+                st.session_state.reset_user = ""
+
+                st.rerun()
+
+    with col2:
+
+        if st.button(
+            "Cancel",
+            use_container_width=True
+        ):
 
             st.session_state.page = "login"
 
             st.rerun()
+    
