@@ -98,8 +98,6 @@ with col2:
 
 if st.session_state.page == "login":
 
-    st.subheader("Login")
-
     userid = st.text_input(
         "User ID"
     ).strip().upper()
