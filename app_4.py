@@ -504,11 +504,7 @@ with right:
             st.rerun()
 
     st.markdown("</div>", unsafe_allow_html=True)
-    # ============================================================
-# REGISTER PAGE
-# ============================================================
-
-    elif st.session_state.page == "register":
+elif st.session_state.page == "register":
 
         st.markdown("""
         <h2 style="
