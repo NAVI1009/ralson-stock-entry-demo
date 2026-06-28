@@ -316,8 +316,8 @@ with right:
         <p style='text-align:center;color:#94A3B8;'>
         Register a new employee
         </p>
-        """, unsafe_allow_html=True)
-            userid = st.text_input(
+        """, unsafe_allow_html=True
+userid = st.text_input(
             "👤 User ID"
             ).strip().upper()
             name = st.text_input(
