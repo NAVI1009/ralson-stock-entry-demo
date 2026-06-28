@@ -547,10 +547,10 @@ with right:
                     "📝 Register",
                     use_container_width=True
                 )
-                forgot_btn = st.button(
-                    "Forgot Password?",
-                    use_container_width=True
-                )
+            forgot_btn = st.button(
+                "Forgot Password?",
+                use_container_width=True
+            )
 
             # =====================================
             # LOGIN
