@@ -10,12 +10,13 @@ from config import (
     LOGS_SHEET,
     CODE_COLUMN,
     MATERIAL_COLUMN,
-    STOCK_COLUMN
+    STOCK_COLUMN,
+    TROLLEY_COLUMN
 )
 
-# ======================================================
+# ==========================================================
 # PAGE CONFIG
-# ======================================================
+# ==========================================================
 
 st.set_page_config(
     page_title="Dashboard",
@@ -23,21 +24,23 @@ st.set_page_config(
     layout="wide"
 )
 
-# ======================================================
-# HIDE STREAMLIT NAVIGATION
-# ======================================================
+# ==========================================================
+# HIDE STREAMLIT PAGE NAVIGATION
+# ==========================================================
 
 st.markdown("""
 <style>
+
 [data-testid="stSidebarNav"]{
-display:none;
+    display:none;
 }
+
 </style>
 """, unsafe_allow_html=True)
 
-# ======================================================
+# ==========================================================
 # LOGIN CHECK
-# ======================================================
+# ==========================================================
 
 if not st.session_state.get("logged_in", False):
     st.switch_page("app_4.py")
@@ -45,9 +48,9 @@ if not st.session_state.get("logged_in", False):
 if "user" not in st.session_state:
     st.switch_page("app_4.py")
 
-# ======================================================
-# GOOGLE SHEETS
-# ======================================================
+# ==========================================================
+# GOOGLE SHEETS CONNECTION
+# ==========================================================
 
 sheet = client.open_by_key(SHEET_ID)
 
@@ -55,15 +58,31 @@ master_ws = sheet.worksheet(MASTER_SHEET)
 users_ws = sheet.worksheet(USERS_SHEET)
 logs_ws = sheet.worksheet(LOGS_SHEET)
 
-# ======================================================
+# ==========================================================
 # CACHE FUNCTIONS
-# ======================================================
+# ==========================================================
 
 @st.cache_data(ttl=30)
 def load_master():
 
     df = pd.DataFrame(
         master_ws.get_all_records()
+    )
+
+    df.columns = (
+        df.columns
+        .astype(str)
+        .str.strip()
+    )
+
+    return df
+
+
+@st.cache_data(ttl=30)
+def load_users():
+
+    df = pd.DataFrame(
+        users_ws.get_all_records()
     )
 
     df.columns = (
@@ -91,33 +110,28 @@ def load_logs():
     return df
 
 
-@st.cache_data(ttl=30)
-def load_users():
-
-    df = pd.DataFrame(
-        users_ws.get_all_records()
-    )
-
-    df.columns = (
-        df.columns
-        .astype(str)
-        .str.strip()
-    )
-
-    return df
-
-# ======================================================
+# ==========================================================
 # LOAD DATA
-# ======================================================
+# ==========================================================
 
 master_df = load_master()
 
 users_df = load_users()
 
 logs_df = load_logs()
-# ======================================================
+
+# ==========================================================
+# INITIAL SESSION VARIABLES
+# ==========================================================
+
+if "update_success" not in st.session_state:
+    st.session_state.update_success = False
+
+if "success_data" not in st.session_state:
+    st.session_state.success_data = {}
+# ==========================================================
 # SIDEBAR
-# ======================================================
+# ==========================================================
 
 with st.sidebar:
 
@@ -139,9 +153,9 @@ with st.sidebar:
 
     st.markdown("---")
 
-    # ===============================
-    # Navigation
-    # ===============================
+    # ======================================================
+    # NAVIGATION
+    # ======================================================
 
     if st.button(
         "📦 Dashboard",
@@ -162,13 +176,18 @@ with st.sidebar:
     ):
         st.switch_page("pages/Profile.py")
 
-    if st.session_state.user["userid"] == "ADMIN001":
+    if (
+        st.session_state.user["userid"]
+        == "ADMIN001"
+    ):
 
         if st.button(
             "⚙️ Admin Panel",
             use_container_width=True
         ):
-            st.switch_page("pages/Admin.py")
+            st.switch_page(
+                "pages/Admin.py"
+            )
 
     st.markdown("---")
 
@@ -177,37 +196,51 @@ with st.sidebar:
         use_container_width=True
     ):
 
+        # Clear cache
         st.cache_data.clear()
 
+        # Clear session
         st.session_state.logged_in = False
         st.session_state.user = {}
+        st.session_state.update_success = False
+        st.session_state.success_data = {}
 
         st.switch_page("app_4.py")
-    # ======================================================
+    # ==========================================================
 # DASHBOARD HEADER
-# ======================================================
+# ==========================================================
 
 st.markdown(
     f"""
-    <div style="
-    background:linear-gradient(90deg,#005BAC,#0077D9);
-    padding:30px;
-    border-radius:20px;
-    color:white;
-    margin-bottom:25px;
-    ">
-    <h1>🏭 Ralson PPC Stock Management</h1>
-    <h3>Welcome, {st.session_state.user["name"]}</h3>
-    <p>
-    <b>Department:</b> {st.session_state.user["department"]}
-    </p>
-    </div>
-    """,
+<div style="
+background:linear-gradient(90deg,#005BAC,#0077D9);
+padding:30px;
+border-radius:18px;
+color:white;
+margin-bottom:20px;
+box-shadow:0px 4px 15px rgba(0,0,0,0.2);
+">
+
+<h1 style="margin-bottom:5px;">
+🏭 Ralson PPC Stock Management
+</h1>
+
+<h3 style="margin-top:10px;">
+Welcome, {st.session_state.user["name"]}
+</h3>
+
+<p style="font-size:18px;">
+<b>Department:</b> {st.session_state.user["department"]}
+</p>
+
+</div>
+""",
     unsafe_allow_html=True
 )
-# ======================================================
+
+# ==========================================================
 # DASHBOARD STATISTICS
-# ======================================================
+# ==========================================================
 
 total_materials = len(master_df)
 
@@ -223,41 +256,49 @@ col1, col2, col3 = st.columns(3)
 with col1:
 
     st.metric(
-        "📦 Materials",
-        f"{total_materials:,}"
+        label="📦 Total Materials",
+        value=f"{total_materials:,}"
     )
 
 with col2:
 
     st.metric(
-        "🏭 Total Stock",
-        f"{int(total_stock):,}"
+        label="🏭 Total Stock",
+        value=f"{int(total_stock):,}"
     )
 
 with col3:
 
     st.metric(
-        "📜 Total Updates",
-        f"{total_updates:,}"
+        label="📜 Total Updates",
+        value=f"{total_updates:,}"
     )
 
 st.divider()
-# ======================================================
-# MATERIAL SEARCH
-# ======================================================
 
-st.subheader("🔍 Material Search")
+# ==========================================================
+# MATERIAL SEARCH
+# ==========================================================
+
+st.subheader("🔍 Search Material")
 
 material_list = sorted(
+
     master_df[MATERIAL_COLUMN]
     .fillna("")
     .astype(str)
     .tolist()
+
 )
 
 selected_material = st.selectbox(
-    "Select Material",
-    material_list
+
+    "Material Description",
+
+    material_list,
+
+    index=0
+
 )
 
 selected_row = master_df[
@@ -278,122 +319,132 @@ if pd.isna(current_stock):
 
 current_stock = int(current_stock)
 
-trolley = selected_row.get(
-    "Trolley No.",
-    "-"
+current_trolley = selected_row.get(
+    TROLLEY_COLUMN,
+    ""
 )
 
-# ======================================================
-# MATERIAL DETAILS
-# ======================================================
-
-c1, c2, c3 = st.columns(3)
-
-with c1:
-
-    st.info(f"""
-
-### 🏷 Material Code
-
-## {material_code}
-
-""")
-
-with c2:
-
-    st.success(f"""
-
-### 📦 Current Stock
-
-## {current_stock}
-
-""")
-
-with c3:
-
-    st.warning(f"""
-
-### 🚚 Trolley No.
-
-## {trolley}
-
-""")
+if pd.isna(current_trolley):
+    current_trolley = ""
 
 st.divider()
+# ==========================================================
+# MATERIAL DETAILS
+# ==========================================================
 
-# ======================================================
-# UPDATE STOCK
-# ======================================================
+card1, card2, card3 = st.columns(3)
 
-st.subheader("📦 Update Material")
+with card1:
 
-col1, col2 = st.columns(2)
+    st.markdown(f"""
+<div style="
+background:#0F172A;
+padding:20px;
+border-radius:15px;
+text-align:center;
+border:1px solid #334155;
+">
 
-with col1:
+<h4 style="color:#60A5FA;">🏷 Material Code</h4>
+
+<h2 style="color:white;">{material_code}</h2>
+
+</div>
+""", unsafe_allow_html=True)
+
+with card2:
+
+    st.markdown(f"""
+<div style="
+background:#0F172A;
+padding:20px;
+border-radius:15px;
+text-align:center;
+border:1px solid #334155;
+">
+
+<h4 style="color:#22C55E;">📦 Current Stock</h4>
+
+<h2 style="color:white;">{current_stock}</h2>
+
+</div>
+""", unsafe_allow_html=True)
+
+with card3:
+
+    st.markdown(f"""
+<div style="
+background:#0F172A;
+padding:20px;
+border-radius:15px;
+text-align:center;
+border:1px solid #334155;
+">
+
+<h4 style="color:#FACC15;">🚚 Trolley No.</h4>
+
+<h2 style="color:white;">{current_trolley}</h2>
+
+</div>
+""", unsafe_allow_html=True)
+
+st.write("")
+
+# ==========================================================
+# UPDATE SECTION
+# ==========================================================
+
+st.subheader("📦 Update Stock")
+
+left, right = st.columns(2)
+
+with left:
+
     new_stock = st.number_input(
-        "📦 Updated Stock",
+        "Updated Stock",
         min_value=0,
         value=current_stock,
         step=1
     )
 
-with col2:
-    current_trolley = selected_row.get("Trolley No.", "")
-
-    if pd.isna(current_trolley):
-        current_trolley = ""
+with right:
 
     trolley_no = st.text_input(
-        "🚚 Trolley Number",
+        "Trolley Number",
         value=str(current_trolley)
     )
 
-# ======================================================
-# SUCCESS CARD
-# ======================================================
+st.write("")
 
-if "update_success" not in st.session_state:
-
-    st.session_state.update_success = False
-
-
-    # ======================================================
+# ==========================================================
 # UPDATE BUTTON
-# ======================================================
+# ==========================================================
 
-if st.button(
+update_btn = st.button(
     "✅ Update Stock",
-    use_container_width=True
-):
+    use_container_width=True,
+    type="primary"
+)
 
-    try:
+st.write("")
 
-        # Find selected row
-        row_index = master_df[
-            master_df[MATERIAL_COLUMN]
-            ==
-            selected_material
-        ].index[0]
+# ==========================================================
+# SUCCESS CARD
+# ==========================================================
 
-        old_stock = pd.to_numeric(
-            master_df.loc[row_index, STOCK_COLUMN],
-            errors="coerce"
-        )
-        if pd.isna(old_stock):
-            old_stock = 0
-            old_stock = int(old_stock)
 if st.session_state.update_success:
 
     data = st.session_state.success_data
 
     st.markdown(f"""
 <div style="
-background:#0F5132;
-padding:20px;
+background:#14532D;
+padding:25px;
 border-radius:15px;
-color:white;
 border-left:8px solid #22C55E;
-margin-bottom:25px;
+color:white;
+margin-top:10px;
+margin-bottom:20px;
 ">
 
 <h2>✅ Stock Updated Successfully</h2>
@@ -408,6 +459,8 @@ margin-bottom:25px;
 
 <b>Updated Stock :</b> {data['new_stock']}<br><br>
 
+<b>Trolley No :</b> {data['trolley']}<br><br>
+
 <b>Updated By :</b> {data['user']}<br><br>
 
 <b>Department :</b> {data['department']}<br><br>
@@ -415,35 +468,61 @@ margin-bottom:25px;
 <b>Date & Time :</b> {data['datetime']}
 
 </div>
-""",
-    unsafe_allow_html=True
-)
+""", unsafe_allow_html=True)
+# ==========================================================
+# UPDATE STOCK
+# ==========================================================
 
-        # -----------------------------------
-        # Update dataframe
-        # -----------------------------------
+if update_btn:
+
+    try:
+
+        # --------------------------------------------
+        # Find Selected Row
+        # --------------------------------------------
+
+        row_index = master_df[
+            master_df[MATERIAL_COLUMN] == selected_material
+        ].index[0]
+
+        old_stock = pd.to_numeric(
+            master_df.loc[row_index, STOCK_COLUMN],
+            errors="coerce"
+        )
+
+        if pd.isna(old_stock):
+            old_stock = 0
+
+        old_stock = int(old_stock)
+
+        # --------------------------------------------
+        # Update DataFrame
+        # --------------------------------------------
 
         master_df.loc[
             row_index,
             STOCK_COLUMN
         ] = int(new_stock)
 
-        # -----------------------------------
-        # Rewrite Master Sheet
-        # -----------------------------------
+        master_df.loc[
+            row_index,
+            TROLLEY_COLUMN
+        ] = trolley_no
+
+        # --------------------------------------------
+        # Update Google Sheet
+        # --------------------------------------------
 
         master_ws.update(
+            "A1",
             [
                 master_df.columns.tolist()
-            ]
-            +
-            master_df.values.tolist(),
-            "A1"
+            ] + master_df.values.tolist()
         )
 
-        # -----------------------------------
+        # --------------------------------------------
         # Save Log
-        # -----------------------------------
+        # --------------------------------------------
 
         log = [
 
@@ -472,17 +551,16 @@ margin-bottom:25px;
             value_input_option="USER_ENTERED"
         )
 
-        # -----------------------------------
-        # Clear cache
-        # -----------------------------------
+        # --------------------------------------------
+        # Clear Cache
+        # --------------------------------------------
 
         load_master.clear()
-
         load_logs.clear()
 
-        # -----------------------------------
+        # --------------------------------------------
         # Success Card Data
-        # -----------------------------------
+        # --------------------------------------------
 
         st.session_state.success_data = {
 
@@ -493,6 +571,8 @@ margin-bottom:25px;
             "old_stock": old_stock,
 
             "new_stock": int(new_stock),
+
+            "trolley": trolley_no,
 
             "user": st.session_state.user["name"],
 
@@ -515,9 +595,9 @@ margin-bottom:25px;
         st.error(
             f"❌ {e}"
         )
-    # ======================================================
-# ADMIN DASHBOARD
-# ======================================================
+    # ==========================================================
+# ADMIN RECENT ACTIVITY
+# ==========================================================
 
 if st.session_state.user["userid"] == "ADMIN001":
 
@@ -525,84 +605,114 @@ if st.session_state.user["userid"] == "ADMIN001":
 
     st.subheader("🕒 Recent Activity")
 
-    logs_df = load_logs()
+    latest_logs = load_logs()
 
-    if not logs_df.empty:
+    if not latest_logs.empty:
 
-        if "datetime" in logs_df.columns:
+        if "datetime" in latest_logs.columns:
 
-            logs_df = logs_df.sort_values(
-                "datetime",
+            latest_logs = latest_logs.sort_values(
+                by="datetime",
                 ascending=False
             )
 
         st.dataframe(
-            logs_df.head(20),
+            latest_logs.head(20),
             use_container_width=True,
             hide_index=True,
-            height=400
+            height=450
         )
 
     else:
 
-        st.info("No recent activity available.")
+        st.info("No activity available.")
 
-# ======================================================
+# ==========================================================
 # LOW STOCK ALERT
-# ======================================================
+# ==========================================================
 
 st.divider()
 
-st.subheader("⚠️ Low Stock Materials")
+st.subheader("⚠ Low Stock Alert")
 
-stock_data = master_df.copy()
+low_stock_df = master_df.copy()
 
-stock_data[STOCK_COLUMN] = pd.to_numeric(
-    stock_data[STOCK_COLUMN],
+low_stock_df[STOCK_COLUMN] = pd.to_numeric(
+    low_stock_df[STOCK_COLUMN],
     errors="coerce"
 ).fillna(0)
 
-low_stock = stock_data[
-    stock_data[STOCK_COLUMN] <= 10
+low_stock_df = low_stock_df[
+    low_stock_df[STOCK_COLUMN] <= 10
 ]
 
-if low_stock.empty:
+if low_stock_df.empty:
 
     st.success("✅ No Low Stock Materials")
 
 else:
 
     st.warning(
-        f"{len(low_stock)} material(s) have stock less than or equal to 10."
+        f"{len(low_stock_df)} material(s) have stock less than or equal to 10."
     )
 
     st.dataframe(
-        low_stock[
+
+        low_stock_df[
             [
                 CODE_COLUMN,
                 MATERIAL_COLUMN,
                 STOCK_COLUMN,
-                "Trolley No."
+                TROLLEY_COLUMN
             ]
         ],
+
         use_container_width=True,
         hide_index=True
+
     )
 
-# ======================================================
-# DASHBOARD FOOTER
-# ======================================================
+# ==========================================================
+# DASHBOARD SUMMARY
+# ==========================================================
 
 st.divider()
 
+c1, c2, c3 = st.columns(3)
+
+with c1:
+
+    st.metric(
+        "Materials",
+        len(master_df)
+    )
+
+with c2:
+
+    st.metric(
+        "Users",
+        len(users_df)
+    )
+
+with c3:
+
+    st.metric(
+        "Updates",
+        len(load_logs())
+    )
+
+# ==========================================================
+# FOOTER
+# ==========================================================
+
+st.markdown("---")
+
 st.caption(
     f"""
-Ralson PPC Stock Management System
+🏭 **Ralson PPC Stock Management System**
 
-Logged in as:
-{st.session_state.user["name"]}
+Logged in as **{st.session_state.user["name"]}**
 
-Department:
-{st.session_state.user["department"]}
+Department: **{st.session_state.user["department"]}**
 """
 )
