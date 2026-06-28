@@ -323,17 +323,6 @@ Cloud Database
 # ============================================
 
 with right:
-
-    st.markdown("""
-    <div style="
-        background:#111827;
-        border:1px solid #334155;
-        border-radius:20px;
-        padding:25px;
-        box-shadow:0 10px 30px rgba(0,0,0,.40);
-    ">
-    """, unsafe_allow_html=True)
-
     st.markdown("""
     <h1 style="
         text-align:center;
