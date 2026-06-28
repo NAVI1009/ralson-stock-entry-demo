@@ -325,19 +325,28 @@ st.divider()
 # UPDATE STOCK
 # ======================================================
 
-st.subheader("📦 Update Stock")
+st.subheader("📦 Update Material")
 
-new_stock = st.number_input(
+col1, col2 = st.columns(2)
 
-    "Updated Stock",
+with col1:
+    new_stock = st.number_input(
+        "📦 Updated Stock",
+        min_value=0,
+        value=current_stock,
+        step=1
+    )
 
-    min_value=0,
+with col2:
+    current_trolley = selected_row.get("Trolley No.", "")
 
-    value=current_stock,
+    if pd.isna(current_trolley):
+        current_trolley = ""
 
-    step=1
-
-)
+    trolley_no = st.text_input(
+        "🚚 Trolley Number",
+        value=str(current_trolley)
+    )
 
 # ======================================================
 # SUCCESS CARD
