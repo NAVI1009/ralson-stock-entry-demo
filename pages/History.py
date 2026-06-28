@@ -68,18 +68,21 @@ logs = load_logs()
 
 with st.sidebar:
 
-    st.title("🏭 Ralson")
+    st.markdown("# 🏭 Ralson")
 
-    st.write(
-        f"**{st.session_state.user['name']}**"
+    st.markdown("---")
+
+    st.markdown(
+        f"""
+### 👤 {st.session_state.user["name"]}
+
+**User ID:** {st.session_state.user["userid"]}
+
+**Department:** {st.session_state.user["department"]}
+
+**Role:** {st.session_state.user["role"]}
+"""
     )
-
-    st.caption(
-        st.session_state.user["department"]
-    )
-
-    st.divider()
-
     if st.button(
         "📦 Dashboard",
         use_container_width=True
