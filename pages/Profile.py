@@ -1,18 +1,12 @@
 import streamlit as st
 import pandas as pd
 
-USERS_FILE = "users.xlsx"
+from google_sheets import client
+from config import SHEET_ID, USERS_SHEET
 
-# ==========================
-# LOGIN CHECK
-# ==========================
-
-if not st.session_state.get("logged_in", False):
-    st.switch_page("app_4.py")
-
-# ==========================
+# ==========================================
 # PAGE CONFIG
-# ==========================
+# ==========================================
 
 st.set_page_config(
     page_title="Profile",
@@ -20,186 +14,122 @@ st.set_page_config(
     layout="wide"
 )
 
-# ==========================
-# HIDE DEFAULT NAVIGATION
-# ==========================
+# ==========================================
+# HIDE STREAMLIT NAVIGATION
+# ==========================================
 
 st.markdown("""
 <style>
-[data-testid="stSidebarNav"] {
-    display:none;
+[data-testid="stSidebarNav"]{
+display:none;
 }
 </style>
 """, unsafe_allow_html=True)
 
-# ==========================
-# SIDEBAR
-# ==========================
+# ==========================================
+# LOGIN CHECK
+# ==========================================
 
-with st.sidebar:
+if not st.session_state.get("logged_in", False):
+    st.switch_page("app_4.py")
 
-    st.markdown("## 🏭 Ralson")
+# ==========================================
+# CONNECT TO GOOGLE SHEETS
+# ==========================================
 
-    st.markdown(
-        f"""
-        👤 **{st.session_state.user['name']}**
+sheet = client.open_by_key(SHEET_ID)
 
-        🏢 {st.session_state.user['department']}
-        """
+users_ws = sheet.worksheet(USERS_SHEET)
+
+# ==========================================
+# LOAD USERS
+# ==========================================
+
+@st.cache_data(ttl=30)
+def load_users():
+
+    df = pd.DataFrame(
+        users_ws.get_all_records()
     )
 
-    st.divider()
+    df.columns = (
+        df.columns
+        .astype(str)
+        .str.strip()
+    )
 
-    # ADMIN SIDEBAR
-    if st.session_state.user["userid"] == "ADMIN001":
+    return df
 
-        if st.button(
-            "⚙️ Admin",
-            use_container_width=True
-        ):
-            st.switch_page(
-                "pages/Admin.py"
-            )
+users_df = load_users()
+# ==========================================
+# CURRENT USER
+# ==========================================
 
-        if st.button(
-            "📜 History",
-            use_container_width=True
-        ):
-            st.switch_page(
-                "pages/History.py"
-            )
+user = users_df[
+    users_df["UserId"].astype(str)
+    ==
+    st.session_state.user["userid"]
+]
 
-        if st.button(
-            "👤 Profile",
-            use_container_width=True
-        ):
-            st.rerun()
+if user.empty:
 
-    # EMPLOYEE SIDEBAR
-    else:
+    st.error("User not found.")
 
-        if st.button(
-            "📦 Dashboard",
-            use_container_width=True
-        ):
-            st.switch_page(
-                "pages/Dashboard.py"
-            )
+    st.stop()
 
-        if st.button(
-            "📜 History",
-            use_container_width=True
-        ):
-            st.switch_page(
-                "pages/History.py"
-            )
+user = user.iloc[0]
 
-        if st.button(
-            "👤 Profile",
-            use_container_width=True
-        ):
-            st.rerun()
-
-    st.divider()
-    if st.button(
-        "🚪 Logout",
-        use_container_width=True
-    ):
-
-        st.session_state.logged_in = False
-        st.session_state.user = {}
-
-        st.switch_page(
-            "app_4.py"
-        )
-# ==========================
-# PROFILE
-# ==========================
+# ==========================================
+# PAGE TITLE
+# ==========================================
 
 st.title("👤 My Profile")
 
-import os
+st.markdown("---")
 
-pic_path = f"profile_pics/{st.session_state.user['userid']}.png"
+# ==========================================
+# USER INFORMATION
+# ==========================================
 
-col1, col2 = st.columns([1, 3])
+col1, col2 = st.columns(2)
 
 with col1:
 
-    if os.path.exists(pic_path):
+    st.text_input(
+        "User ID",
+        value=user["UserId"],
+        disabled=True
+    )
 
-        st.image(
-            pic_path,
-            width=220
-        )
-
-    else:
-
-        st.markdown("## 👤")
+    st.text_input(
+        "Name",
+        value=user["Name"],
+        disabled=True
+    )
 
 with col2:
 
-    st.markdown(
-        f"""
-
-        <h2>{st.session_state.user['name']}</h2>
-
-        <h4>User ID: {st.session_state.user['userid']}</h4>
-
-        <h4>Department: {st.session_state.user['department']}</h4>
-        """,
-        unsafe_allow_html=True
+    st.text_input(
+        "Department",
+        value=user["Department"],
+        disabled=True
     )
 
-st.divider()
-
-st.subheader("🖼️ Profile Picture")
-
-uploaded_file = st.file_uploader(
-    "Select Image From Gallery",
-    type=["png", "jpg", "jpeg"]
-)
-
-if uploaded_file is not None:
-
-    import os
-
-    os.makedirs(
-        "profile_pics",
-        exist_ok=True
+    st.text_input(
+        "Role",
+        value=user["Role"],
+        disabled=True
     )
 
-    file_path = (
-        f"profile_pics/"
-        f"{st.session_state.user['userid']}.png"
-    )
+st.markdown("---")
 
-    with open(
-        file_path,
-        "wb"
-    ) as f:
-
-        f.write(
-            uploaded_file.getbuffer()
-        )
-
-    st.success(
-        "Profile Picture Updated"
-    )
-
-    st.rerun()
-
-
-
-# ==========================
+# ==========================================
 # CHANGE PASSWORD
-# ==========================
-
-st.divider()
+# ==========================================
 
 st.subheader("🔒 Change Password")
 
-old_password = st.text_input(
+current_password = st.text_input(
     "Current Password",
     type="password"
 )
@@ -210,52 +140,79 @@ new_password = st.text_input(
 )
 
 confirm_password = st.text_input(
-    "Confirm New Password",
+    "Confirm Password",
     type="password"
 )
+# ==========================================
+# UPDATE PASSWORD
+# ==========================================
 
 if st.button(
-    "Update Password",
+    "💾 Update Password",
     use_container_width=True
 ):
 
-    users = pd.read_excel(
-        USERS_FILE,
-        dtype=str
-    ).fillna("")
+    if current_password == "":
 
-    row = users[
-        users["userid"]
-        ==
-        st.session_state.user["userid"]
-    ]
+        st.error("Enter your current password.")
 
-    if row.empty:
+    elif current_password != str(user["Password"]):
 
-        st.error("User not found")
+        st.error("Current password is incorrect.")
 
-    elif old_password != row.iloc[0]["password"]:
+    elif new_password == "":
 
-        st.error("Current password is incorrect")
+        st.error("New password cannot be empty.")
 
     elif new_password != confirm_password:
 
-        st.error("Passwords do not match")
+        st.error("New passwords do not match.")
+
+    elif new_password == current_password:
+
+        st.warning("New password must be different from the current password.")
 
     else:
 
-        idx = row.index[0]
+        try:
 
-        users.loc[
-            idx,
-            "password"
-        ] = new_password
+            # Reload latest users data
+            users_df = load_users()
 
-        users.to_excel(
-            USERS_FILE,
-            index=False
-        )
+            row_index = users_df[
+                users_df["UserId"].astype(str)
+                ==
+                st.session_state.user["userid"]
+            ].index[0]
 
-        st.success(
-            "✅ Password Updated Successfully"
-        )
+            users_df.loc[
+                row_index,
+                "Password"
+            ] = new_password
+
+            # Rewrite users sheet
+            users_ws.clear()
+
+            users_ws.update(
+                [users_df.columns.tolist()]
+                +
+                users_df.values.tolist()
+            )
+
+            # Clear cache
+            load_users.clear()
+
+            st.success("✅ Password updated successfully.")
+
+            st.info(
+                "Please login again using your new password."
+            )
+
+            st.session_state.logged_in = False
+            st.session_state.user = {}
+
+            st.switch_page("app_4.py")
+
+        except Exception as e:
+
+            st.error(f"Error updating password: {e}")
