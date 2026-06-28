@@ -149,26 +149,22 @@ with st.sidebar:
 
 st.markdown(
     f"""
-    <div style="
-        background:linear-gradient(90deg,#005BAC,#0077D9);
-        padding:25px;
-        border-radius:15px;
-        color:white;
-        margin-bottom:25px;
-    ">
-        <h2>🏭 Ralson PPC Stock Management</h2>
-        <h4>
-            Welcome,
-            {st.session_state.user["name"]}
-        </h4>
+<div style="
+background:linear-gradient(90deg,#005BAC,#0077D9);
+padding:25px;
+border-radius:15px;
+color:white;
+margin-bottom:25px;
+">
 
-        <p>
-            Department :
-            {st.session_state.user["department"]}
-        </p>
+<h2>🏭 Ralson PPC Stock Management</h2>
 
-    </div>
-    """,
+<h3>Welcome, {st.session_state.user["name"]}</h3>
+
+<p><b>Department:</b> {st.session_state.user["department"]}</p>
+
+</div>
+""",
     unsafe_allow_html=True
 )
 
