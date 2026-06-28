@@ -5,9 +5,9 @@ import time
 from google_sheets import client
 from config import SHEET_ID, USERS_SHEET
 
-# ==========================================================
+# ============================================
 # PAGE CONFIG
-# ==========================================================
+# ============================================
 
 st.set_page_config(
     page_title="Ralson PPC Portal",
@@ -16,233 +16,184 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# ==========================================================
-# CSS
-# ==========================================================
+# ============================================
+# DARK ERP CSS
+# ============================================
 
 st.markdown("""
 <style>
 
-/* ==========================================
-   HIDE STREAMLIT
-========================================== */
+/* Hide Streamlit */
 
 #MainMenu,
 footer,
 header{
-    visibility:hidden;
+visibility:hidden;
 }
 
-[data-testid="stSidebar"],
-[data-testid="stSidebarNav"]{
-    display:none;
+[data-testid="stSidebar"]{
+display:none;
 }
 
-/* ==========================================
-   PAGE
-========================================== */
+/* Background */
 
 .stApp{
 
-background:#F7F8FC;
+background:#0F172A;
+
+background-image:
+radial-gradient(circle at top right,#1E3A8A 0%,transparent 35%),
+radial-gradient(circle at bottom left,#1E293B 0%,transparent 35%);
+
+color:white;
 
 }
+
+/* Page */
+
 .block-container{
 
-    max-width:1450px;
+padding-top:30px;
 
-    padding-top:30px;
-
-}
-
-/* ==========================================
-   HEADINGS
-========================================== */
-
-h1,h2,h3,h4{
-
-    color:#005BAC;
-
-    font-family:'Segoe UI';
-
-    font-weight:700;
+max-width:1450px;
 
 }
 
-/* ==========================================
-   LABELS
-========================================== */
+/* Headings */
 
-label{
+h1,h2,h3{
 
-    color:#1F2937 !important;
+color:white;
 
-    font-weight:600 !important;
-
-    font-size:17px !important;
+font-family:'Segoe UI';
 
 }
 
-/* ==========================================
-   TEXT INPUT
-========================================== */
+/* Text */
 
-.stTextInput>div>div>input{
+p,label{
 
-    background:white !important;
-
-    color:black !important;
-
-    border:1px solid #D1D5DB;
-
-    border-radius:18px !important;
-
-    font-size:18px !important;
-
-    padding:14px 18px !important;
-
-    height:60px !important;
-
-    box-shadow:none;
+color:#CBD5E1 !important;
 
 }
 
-.stTextInput>div>div>input:focus{
+/* Text Inputs */
 
-    border:2px solid #2563EB !important;
+.stTextInput input{
 
-    box-shadow:0 0 10px rgba(37,99,235,.30);
+background:#1E293B !important;
+
+color:white !important;
+
+border:1px solid #334155 !important;
+
+border-radius:14px !important;
+
+height:55px;
+
+font-size:18px;
 
 }
-
-/* Placeholder */
 
 .stTextInput input::placeholder{
 
-    color:#9CA3AF !important;
+color:#94A3B8;
 
 }
 
-/* ==========================================
-   PASSWORD
-========================================== */
+.stTextInput input:focus{
 
-input[type=password]{
+border:1px solid #22C55E !important;
 
-    border-radius:18px !important;
+box-shadow:0 0 12px rgba(34,197,94,.25);
 
 }
 
-/* ==========================================
-   CHECKBOX
-========================================== */
+/* Checkbox */
 
 .stCheckbox label{
 
-    color:black !important;
-
-    font-size:18px !important;
-
-    font-weight:600 !important;
+color:white !important;
 
 }
 
-/* ==========================================
-   BUTTONS
-========================================== */
+/* Buttons */
 
 .stButton>button{
 
-    height:58px !important;
+height:52px;
 
-    border-radius:18px !important;
+border-radius:14px;
 
-    border:none !important;
+font-size:17px;
 
-    font-size:18px !important;
+font-weight:700;
 
-    font-weight:700 !important;
+border:none;
 
-    transition:.25s;
+transition:.25s;
 
 }
 
 .stButton>button:hover{
 
-    transform:translateY(-2px);
+transform:translateY(-2px);
 
 }
 
-/* ==========================================
-   SUCCESS
-========================================== */
+/* Login */
 
-.stSuccess{
+button[kind="primary"]{
 
-    border-radius:18px;
+background:#22C55E !important;
 
-}
-
-/* ==========================================
-   ERROR
-========================================== */
-
-.stError{
-
-    border-radius:18px;
+color:white !important;
 
 }
 
-/* ==========================================
-   INFO
-========================================== */
+/* Normal */
 
-.stInfo{
+button[kind="secondary"]{
 
-    border-radius:18px;
+background:#3B82F6 !important;
+
+color:white !important;
 
 }
 
-/* ==========================================
-   SELECTBOX
-========================================== */
+/* Select */
 
 .stSelectbox div{
 
-    border-radius:18px !important;
+background:#1E293B;
+
+color:white;
+
+border-radius:14px;
 
 }
 
-/* ==========================================
-   NUMBER INPUT
-========================================== */
+/* Success */
 
-.stNumberInput input{
+.stSuccess{
 
-    border-radius:18px !important;
-
-    height:60px !important;
+border-radius:15px;
 
 }
 
-/* ==========================================
-   DATAFRAME
-========================================== */
+/* Error */
 
-.stDataFrame{
+.stError{
 
-    border-radius:18px;
-
-    overflow:hidden;
+border-radius:15px;
 
 }
 
 </style>
 """, unsafe_allow_html=True)
-
-# ==========================================================
-# SESSION
-# ==========================================================
+# ============================================
+# SESSION VARIABLES
+# ============================================
 
 if "page" not in st.session_state:
     st.session_state.page = "login"
@@ -256,20 +207,19 @@ if "user" not in st.session_state:
 if "reset_user" not in st.session_state:
     st.session_state.reset_user = ""
 
-# ==========================================================
+# ============================================
 # GOOGLE SHEETS
-# ==========================================================
+# ============================================
 
 sheet = client.open_by_key(SHEET_ID)
 
 users_ws = sheet.worksheet(USERS_SHEET)
 
-# ==========================================================
+# ============================================
 # LOAD USERS
-# ==========================================================
+# ============================================
 
-@st.cache_data(ttl=20)
-
+@st.cache_data(ttl=30)
 def load_users():
 
     df = pd.DataFrame(
@@ -284,744 +234,601 @@ def load_users():
 
     return df
 
+
 users = load_users()
 
-# ==========================================================
+# ============================================
 # PAGE LAYOUT
-# ==========================================================
+# ============================================
 
 left, right = st.columns(
-    [1.1,1],
+    [1.35, 1],
     gap="large"
 )
-# ==========================================================
+
+# ============================================
 # LEFT PANEL
-# ==========================================================
+# ============================================
 
 with left:
 
     st.image(
         "ralson_logo.png",
-        width=420
+        width=360
     )
 
     st.markdown("""
-    <h1 style="
-    color:#005BAC;
-    font-size:60px;
-    font-weight:800;
-    margin-bottom:0;
-    ">
-    Welcome to
-    </h1>
-    """, unsafe_allow_html=True)
+# Welcome to
 
-    st.markdown("""
-    <h1 style="
-    color:#D71920;
-    font-size:72px;
-    font-weight:900;
-    margin-top:-25px;
-    margin-bottom:0;
-    ">
-    RALSON
-    </h1>
-    """, unsafe_allow_html=True)
+# <span style="color:#22C55E;">RALSON</span>
 
-    st.markdown("""
-    <h2 style="
-    color:#374151;
-    font-size:44px;
-    font-weight:700;
-    margin-top:-10px;
-    ">
-    PPC Stock Management Portal
-    </h2>
-    """, unsafe_allow_html=True)
+### PPC Stock Management Portal
 
-    st.markdown("""
-    <p style="
-    color:#6B7280;
-    font-size:20px;
-    line-height:1.8;
-    max-width:700px;
-    ">
-    Manage tyre inventory, stock updates,
-    trolley allocation and production planning
-    through one centralized cloud platform.
-    </p>
-    """, unsafe_allow_html=True)
+Manage tyre inventory, stock updates,
+trolley allocation and production planning
+through one centralized cloud platform.
+""",
+    unsafe_allow_html=True)
 
     st.write("")
     st.write("")
 
-    # ======================================================
-    # FEATURE CARDS
-    # ======================================================
+    r1, r2 = st.columns(2)
 
-    row1_col1, row1_col2 = st.columns(2)
+    with r1:
 
-    with row1_col1:
+        st.info("""
+### 📦 Stock Updates
 
-        st.markdown("""
-        <div style="
-        background:white;
-        border-radius:18px;
-        padding:25px;
-        box-shadow:0 10px 25px rgba(0,0,0,.08);
-        min-height:170px;
-        ">
+Real-time inventory
+management.
+""")
 
-        <h2 style="color:#005BAC;">
-        📦 Stock Updates
-        </h2>
+    with r2:
 
-        <p style="
-        color:#555;
-        font-size:18px;
-        ">
-        Instantly update inventory
-        and stock records in
-        real time.
-        </p>
+        st.info("""
+### 📊 Live Reports
 
-        </div>
-        """, unsafe_allow_html=True)
-
-    with row1_col2:
-
-        st.markdown("""
-        <div style="
-        background:white;
-        border-radius:18px;
-        padding:25px;
-        box-shadow:0 10px 25px rgba(0,0,0,.08);
-        min-height:170px;
-        ">
-
-        <h2 style="color:#005BAC;">
-        📊 Live Reports
-        </h2>
-
-        <p style="
-        color:#555;
-        font-size:18px;
-        ">
-        Track production,
-        stock movement and
-        update history.
-        </p>
-
-        </div>
-        """, unsafe_allow_html=True)
+History, Logs,
+Material Status.
+""")
 
     st.write("")
 
-    row2_col1, row2_col2 = st.columns(2)
+    r3, r4 = st.columns(2)
 
-    with row2_col1:
+    with r3:
 
-        st.markdown("""
-        <div style="
-        background:white;
-        border-radius:18px;
-        padding:25px;
-        box-shadow:0 10px 25px rgba(0,0,0,.08);
-        min-height:170px;
-        ">
+        st.info("""
+### 👥 Multi User
 
-        <h2 style="color:#005BAC;">
-        👥 Multi User
-        </h2>
+Operator
 
-        <p style="
-        color:#555;
-        font-size:18px;
-        ">
-        Secure login for
-        Operators,
-        Supervisors
-        and Admins.
-        </p>
+Supervisor
 
-        </div>
-        """, unsafe_allow_html=True)
+Admin
+""")
 
-    with row2_col2:
+    with r4:
 
-        st.markdown("""
-        <div style="
-        background:white;
-        border-radius:18px;
-        padding:25px;
-        box-shadow:0 10px 25px rgba(0,0,0,.08);
-        min-height:170px;
-        ">
+        st.info("""
+### 🔒 Secure
 
-        <h2 style="color:#005BAC;">
-        🔒 Secure Cloud
-        </h2>
+Google Sheets
 
-        <p style="
-        color:#555;
-        font-size:18px;
-        ">
-        Data stored safely
-        using Google Sheets
-        cloud integration.
-        </p>
-
-        </div>
-        """, unsafe_allow_html=True)
-
-    st.write("")
-    st.caption("© 2026 Ralson Tyres Ltd. | Production Planning & Control")
-# ==========================================================
+Cloud Database
+""")
+# ============================================
 # RIGHT PANEL
-# ==========================================================
+# ============================================
 
 with right:
 
-    st.write("")
-    st.write("")
+    st.markdown("""
+    <div style="
+        background:#111827;
+        border:1px solid #334155;
+        border-radius:20px;
+        padding:25px;
+        box-shadow:0 10px 30px rgba(0,0,0,.40);
+    ">
+    """, unsafe_allow_html=True)
 
-    login_container = st.container(border=True)
-
-    with login_container:
-
-        st.markdown("""
-        <h1 style="
+    st.markdown("""
+    <h1 style="
         text-align:center;
-        color:#005BAC;
-        font-size:46px;
-        font-weight:800;
+        color:white;
         margin-bottom:5px;
-        ">
-        Sign In
-        </h1>
-        """, unsafe_allow_html=True)
+    ">
+    Sign In
+    </h1>
 
-        st.markdown("""
-        <p style="
+    <p style="
         text-align:center;
-        color:#6B7280;
-        font-size:18px;
+        color:#94A3B8;
         margin-bottom:25px;
-        ">
-        Login to access the PPC Stock Portal
-        </p>
-        """, unsafe_allow_html=True)
+    ">
+    Login to access the PPC Stock Portal
+    </p>
+    """, unsafe_allow_html=True)
 
-        # =====================================
-        # LOGIN PAGE
-        # =====================================
+    # ============================================
+    # LOGIN PAGE
+    # ============================================
 
-        if st.session_state.page == "login":
+    if st.session_state.page == "login":
 
-            userid = st.text_input(
-                "👤 User ID",
-                placeholder="Enter User ID"
-            ).strip().upper()
+        userid = st.text_input(
+            "👤 User ID",
+            placeholder="Enter User ID"
+        ).strip().upper()
 
-            password = st.text_input(
-                "🔒 Password",
-                type="password",
-                placeholder="Enter Password"
+        password = st.text_input(
+            "🔒 Password",
+            type="password",
+            placeholder="Enter Password"
+        )
+
+        remember = st.checkbox("Remember Me")
+
+        st.write("")
+
+        c1, c2 = st.columns(2)
+
+        with c1:
+
+            login_btn = st.button(
+                "🟢 Login",
+                use_container_width=True,
+                type="primary"
             )
 
-            remember = st.checkbox(
-                "Remember Me"
-            )
+        with c2:
 
-            st.write("")
-
-            left_space, c1, c2, right_space = st.columns([0.15, 1, 1, 0.15])
-
-            with c1:
-                login_btn = st.button(
-                    "🔑 Login",
-                    use_container_width=True,
-                    type="primary"
-                )
-            with c2:
-                register_btn = st.button(
-                    "📝 Register",
-                    use_container_width=True
-                )
-            forgot_btn = st.button(
-                "Forgot Password?",
+            register_btn = st.button(
+                "🔵 Register",
                 use_container_width=True
             )
 
-            # =====================================
-            # LOGIN
-            # =====================================
+        forgot_btn = st.button(
+            "🔷 Forgot Password?",
+            use_container_width=True
+        )
 
-            if login_btn:
+        # ============================================
+        # LOGIN LOGIC
+        # ============================================
 
-                user = users[
+        if login_btn:
+
+            user = users[
+                users["UserId"]
+                .astype(str)
+                .str.upper()
+                ==
+                userid
+            ]
+
+            if user.empty:
+
+                st.error("User ID not found.")
+
+            else:
+
+                user = user.iloc[0]
+
+                if password != str(user["Password"]):
+
+                    st.error("Incorrect Password.")
+
+                else:
+
+                    st.session_state.logged_in = True
+
+                    st.session_state.user = {
+
+                        "userid": user["UserId"],
+
+                        "name": user["Name"],
+
+                        "department": user["Department"],
+
+                        "role": user["Role"]
+
+                    }
+
+                    st.success(
+                        f"Welcome {user['Name']}"
+                    )
+
+                    time.sleep(1)
+
+                    st.switch_page(
+                        "pages/Dashboard.py"
+                    )
+
+        if register_btn:
+
+            st.session_state.page = "register"
+
+            st.rerun()
+
+        if forgot_btn:
+
+            st.session_state.page = "forgot"
+
+            st.rerun()
+            # ============================================
+    # REGISTER PAGE
+    # ============================================
+
+    elif st.session_state.page == "register":
+
+        st.markdown("""
+        <h2 style='text-align:center;color:white;'>
+        Create New Account
+        </h2>
+
+        <p style='text-align:center;color:#94A3B8;'>
+        Register a new employee
+        </p>
+        """, unsafe_allow_html=True)
+
+        userid = st.text_input(
+            "👤 User ID"
+        ).strip().upper()
+
+        name = st.text_input(
+            "👨 Full Name"
+        )
+
+        department = st.text_input(
+            "🏭 Department"
+        )
+
+        role = st.selectbox(
+            "Role",
+            [
+                "Operator",
+                "Supervisor",
+                "Manager",
+                "Admin"
+            ]
+        )
+
+        password = st.text_input(
+            "🔒 Password",
+            type="password"
+        )
+
+        confirm = st.text_input(
+            "✅ Confirm Password",
+            type="password"
+        )
+
+        st.write("")
+
+        c1, c2 = st.columns(2)
+
+        with c1:
+
+            create_btn = st.button(
+                "✅ Create Account",
+                use_container_width=True,
+                type="primary"
+            )
+
+        with c2:
+
+            back_btn = st.button(
+                "⬅ Back",
+                use_container_width=True
+            )
+
+        if create_btn:
+
+            users = load_users()
+
+            existing = users[
+                users["UserId"]
+                .astype(str)
+                .str.upper()
+                ==
+                userid
+            ]
+
+            if userid == "":
+
+                st.error("Please enter User ID.")
+
+            elif name == "":
+
+                st.error("Please enter Name.")
+
+            elif department == "":
+
+                st.error("Please enter Department.")
+
+            elif password == "":
+
+                st.error("Please enter Password.")
+
+            elif password != confirm:
+
+                st.error("Passwords do not match.")
+
+            elif not existing.empty:
+
+                st.error("User already exists.")
+
+            else:
+
+                users_ws.append_row(
+                    [
+                        userid,
+                        name,
+                        department,
+                        role,
+                        password
+                    ],
+                    value_input_option="USER_ENTERED"
+                )
+
+                load_users.clear()
+
+                st.success(
+                    "Account Created Successfully."
+                )
+
+                time.sleep(1)
+
+                st.session_state.page = "login"
+
+                st.rerun()
+
+        if back_btn:
+
+            st.session_state.page = "login"
+
+            st.rerun()
+            # ============================================
+    # FORGOT PASSWORD
+    # ============================================
+
+    elif st.session_state.page == "forgot":
+
+        st.markdown("""
+        <h2 style='text-align:center;color:white;'>
+        Forgot Password
+        </h2>
+
+        <p style='text-align:center;color:#94A3B8;'>
+        Verify your identity
+        </p>
+        """, unsafe_allow_html=True)
+
+        userid = st.text_input(
+            "👤 User ID"
+        ).strip().upper()
+
+        name = st.text_input(
+            "👨 Full Name"
+        )
+
+        st.write("")
+
+        c1, c2 = st.columns(2)
+
+        with c1:
+
+            verify_btn = st.button(
+                "✅ Verify",
+                use_container_width=True,
+                type="primary"
+            )
+
+        with c2:
+
+            back_btn = st.button(
+                "⬅ Back",
+                use_container_width=True
+            )
+
+        if verify_btn:
+
+            users = load_users()
+
+            row = users[
+                (
                     users["UserId"]
                     .astype(str)
                     .str.upper()
                     ==
                     userid
-                ]
+                )
+                &
+                (
+                    users["Name"]
+                    .astype(str)
+                    .str.lower()
+                    ==
+                    name.lower()
+                )
+            ]
 
-                if user.empty:
+            if row.empty:
 
-                    st.error(
-                        "User ID not found."
-                    )
+                st.error(
+                    "Invalid User ID or Name."
+                )
 
-                else:
+            else:
 
-                    user = user.iloc[0]
+                st.session_state.reset_user = userid
 
-                    if password != str(user["Password"]):
-
-                        st.error(
-                            "Incorrect Password."
-                        )
-
-                    else:
-
-                        st.success(
-                            f"Welcome {user['Name']}"
-                        )
-
-                        st.session_state.logged_in = True
-
-                        st.session_state.user = {
-
-                            "userid": user["UserId"],
-
-                            "name": user["Name"],
-
-                            "department": user["Department"],
-
-                            "role": user["Role"]
-
-                        }
-
-                        time.sleep(1)
-
-                        st.switch_page(
-                            "pages/Dashboard.py"
-                        )
-
-            if register_btn:
-
-                st.session_state.page = "register"
+                st.session_state.page = "reset"
 
                 st.rerun()
 
-            if forgot_btn:
+        if back_btn:
 
-                st.session_state.page = "forgot"
+            st.session_state.page = "login"
 
-                st.rerun()
-        # =====================================================
-        # REGISTER PAGE
-        # =====================================================
+            st.rerun()
 
-        elif st.session_state.page == "register":
+    # ============================================
+    # RESET PASSWORD
+    # ============================================
 
-            st.markdown("""
-            <h1 style="
-            text-align:center;
-            color:#005BAC;
-            font-size:42px;
-            font-weight:800;
-            ">
-            Create Account
-            </h1>
+    elif st.session_state.page == "reset":
 
-            <p style="
-            text-align:center;
-            color:#666;
-            ">
-            Register a new employee
-            </p>
-            """, unsafe_allow_html=True)
+        st.markdown("""
+        <h2 style='text-align:center;color:white;'>
+        Reset Password
+        </h2>
 
-            userid = st.text_input(
-                "👤 User ID"
-            ).strip().upper()
+        <p style='text-align:center;color:#94A3B8;'>
+        Create your new password
+        </p>
+        """, unsafe_allow_html=True)
 
-            name = st.text_input(
-                "👤 Full Name"
+        pwd1 = st.text_input(
+            "🔒 New Password",
+            type="password"
+        )
+
+        pwd2 = st.text_input(
+            "✅ Confirm Password",
+            type="password"
+        )
+
+        st.write("")
+
+        c1, c2 = st.columns(2)
+
+        with c1:
+
+            save_btn = st.button(
+                "💾 Save Password",
+                use_container_width=True,
+                type="primary"
             )
 
-            department = st.text_input(
-                "🏢 Department"
+        with c2:
+
+            cancel_btn = st.button(
+                "❌ Cancel",
+                use_container_width=True
             )
 
-            role = st.selectbox(
+        if save_btn:
 
-                "Role",
+            if pwd1 == "":
 
-                [
-
-                    "Operator",
-
-                    "Supervisor",
-
-                    "Manager"
-
-                ]
-
-            )
-
-            password = st.text_input(
-
-                "🔒 Password",
-
-                type="password"
-
-            )
-
-            confirm = st.text_input(
-
-                "✅ Confirm Password",
-
-                type="password"
-
-            )
-
-            st.write("")
-
-            c1, c2 = st.columns(2)
-
-            with c1:
-
-                create_btn = st.button(
-
-                    "✅ Create Account",
-
-                    use_container_width=True,
-
-                    type="primary"
-
+                st.error(
+                    "Password cannot be empty."
                 )
 
-            with c2:
+            elif pwd1 != pwd2:
 
-                back_btn = st.button(
-
-                    "⬅ Back",
-
-                    use_container_width=True
-
+                st.error(
+                    "Passwords do not match."
                 )
 
-            # ==========================================
-            # CREATE ACCOUNT
-            # ==========================================
-
-            if create_btn:
+            else:
 
                 users = load_users()
 
-                existing = users[
+                idx = users[
                     users["UserId"]
                     .astype(str)
                     .str.upper()
                     ==
-                    userid
-                ]
+                    st.session_state.reset_user
+                ].index[0]
 
-                if userid == "":
+                users.loc[
+                    idx,
+                    "Password"
+                ] = pwd1
 
-                    st.error(
-                        "Please enter User ID."
-                    )
+                users_ws.clear()
 
-                elif name == "":
-
-                    st.error(
-                        "Please enter Name."
-                    )
-
-                elif department == "":
-
-                    st.error(
-                        "Please enter Department."
-                    )
-
-                elif password == "":
-
-                    st.error(
-                        "Please enter Password."
-                    )
-
-                elif password != confirm:
-
-                    st.error(
-                        "Passwords do not match."
-                    )
-
-                elif not existing.empty:
-
-                    st.error(
-                        "User ID already exists."
-                    )
-
-                else:
-
-                    users_ws.append_row(
-
-                        [
-
-                            userid,
-
-                            name,
-
-                            department,
-
-                            role,
-
-                            password
-
-                        ],
-
-                        value_input_option="USER_ENTERED"
-
-                    )
-
-                    load_users.clear()
-
-                    st.success(
-                        "Account Created Successfully."
-                    )
-
-                    time.sleep(1)
-
-                    st.session_state.page = "login"
-
-                    st.rerun()
-
-            if back_btn:
-
-                st.session_state.page = "login"
-
-                st.rerun()
-                    # =====================================================
-        # FORGOT PASSWORD
-        # =====================================================
-
-        elif st.session_state.page == "forgot":
-
-            st.markdown("""
-            <h1 style="
-            text-align:center;
-            color:#005BAC;
-            font-size:42px;
-            font-weight:800;
-            ">
-            Forgot Password
-            </h1>
-
-            <p style="
-            text-align:center;
-            color:#666;
-            ">
-            Verify your identity to reset your password
-            </p>
-            """, unsafe_allow_html=True)
-
-            userid = st.text_input(
-                "👤 User ID"
-            ).strip().upper()
-
-            name = st.text_input(
-                "👤 Full Name"
-            ).strip()
-
-            st.write("")
-
-            c1, c2 = st.columns(2)
-
-            with c1:
-
-                continue_btn = st.button(
-                    "➡ Continue",
-                    use_container_width=True,
-                    type="primary"
+                users_ws.update(
+                    [users.columns.tolist()]
+                    +
+                    users.values.tolist()
                 )
 
-            with c2:
+                load_users.clear()
 
-                back_btn = st.button(
-                    "⬅ Back",
-                    use_container_width=True
+                st.success(
+                    "Password Updated Successfully."
                 )
 
-            if continue_btn:
-
-                users = load_users()
-
-                row = users[
-                    (
-                        users["UserId"]
-                        .astype(str)
-                        .str.upper()
-                        ==
-                        userid
-                    )
-                    &
-                    (
-                        users["Name"]
-                        .astype(str)
-                        .str.lower()
-                        ==
-                        name.lower()
-                    )
-                ]
-
-                if row.empty:
-
-                    st.error(
-                        "User ID or Name is incorrect."
-                    )
-
-                else:
-
-                    st.session_state.reset_user = userid
-
-                    st.session_state.page = "reset"
-
-                    st.rerun()
-
-            if back_btn:
-
-                st.session_state.page = "login"
-
-                st.rerun()
-
-        # =====================================================
-        # RESET PASSWORD
-        # =====================================================
-
-        elif st.session_state.page == "reset":
-
-            st.markdown("""
-            <h1 style="
-            text-align:center;
-            color:#005BAC;
-            font-size:42px;
-            font-weight:800;
-            ">
-            Reset Password
-            </h1>
-
-            <p style="
-            text-align:center;
-            color:#666;
-            ">
-            Create your new password
-            </p>
-            """, unsafe_allow_html=True)
-
-            pwd1 = st.text_input(
-                "🔒 New Password",
-                type="password"
-            )
-
-            pwd2 = st.text_input(
-                "✅ Confirm Password",
-                type="password"
-            )
-
-            st.write("")
-
-            c1, c2 = st.columns(2)
-
-            with c1:
-
-                save_btn = st.button(
-                    "💾 Save Password",
-                    use_container_width=True,
-                    type="primary"
-                )
-
-            with c2:
-
-                cancel_btn = st.button(
-                    "❌ Cancel",
-                    use_container_width=True
-                )
-
-            if save_btn:
-
-                if pwd1 == "":
-
-                    st.error(
-                        "Password cannot be empty."
-                    )
-
-                elif pwd1 != pwd2:
-
-                    st.error(
-                        "Passwords do not match."
-                    )
-
-                else:
-
-                    users = load_users()
-
-                    idx = users[
-                        users["UserId"]
-                        .astype(str)
-                        .str.upper()
-                        ==
-                        st.session_state.reset_user
-                    ].index[0]
-
-                    users.loc[
-                        idx,
-                        "Password"
-                    ] = pwd1
-
-                    users_ws.clear()
-
-                    users_ws.update(
-                        [users.columns.tolist()]
-                        +
-                        users.values.tolist()
-                    )
-
-                    load_users.clear()
-
-                    st.success(
-                        "Password Updated Successfully."
-                    )
-
-                    time.sleep(1)
-
-                    st.session_state.page = "login"
-
-                    st.session_state.reset_user = ""
-
-                    st.rerun()
-
-            if cancel_btn:
-
-                st.session_state.page = "login"
+                time.sleep(1)
 
                 st.session_state.reset_user = ""
 
+                st.session_state.page = "login"
+
                 st.rerun()
-# ==========================================================
-# SPACING
-# ==========================================================
 
-st.write("")
-st.write("")
-st.write("")
+        if cancel_btn:
 
-# ==========================================================
+            st.session_state.reset_user = ""
+
+            st.session_state.page = "login"
+
+            st.rerun()
+# ============================================
 # FOOTER
-# ==========================================================
+# ============================================
 
+st.write("")
+st.write("")
+st.write("")
 
+st.markdown("""
+<hr style="border:1px solid #334155;">
+""", unsafe_allow_html=True)
 
+col1, col2, col3 = st.columns([2,1,2])
+
+with col1:
+
+    st.markdown("""
+<div style="color:#94A3B8;font-size:14px;">
+🏭 <b>Ralson Tyres Ltd.</b><br>
+Production Planning & Control
+</div>
+""", unsafe_allow_html=True)
+
+with col2:
+
+    st.markdown("""
+<div style="text-align:center;color:#64748B;font-size:14px;">
+Version 1.0
+</div>
+""", unsafe_allow_html=True)
+
+with col3:
+
+    st.markdown("""
+<div style="text-align:right;color:#94A3B8;font-size:14px;">
+Developed using Streamlit & Google Sheets
+</div>
+""", unsafe_allow_html=True)
+
+st.write("")
+
+st.markdown("""
+<div style="
+text-align:center;
+color:#64748B;
+font-size:13px;
+padding-bottom:10px;
+">
+© 2026 Ralson Tyres Limited • All Rights Reserved
+</div>
+""", unsafe_allow_html=True)
