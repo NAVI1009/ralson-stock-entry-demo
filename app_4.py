@@ -363,11 +363,7 @@ with centre:
             st.session_state.page = "forgot"
 
             st.rerun()
-            # ============================================
-    # REGISTER PAGE
-    # ============================================
-
-    elif st.session_state.page == "register":
+        elif st.session_state.page == "register":
 
         st.markdown("""
         <h2 style='text-align:center;color:white;'>
