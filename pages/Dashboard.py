@@ -153,10 +153,7 @@ with st.sidebar:
     # ======================================================
     # NAVIGATION
     # ======================================================
-    dashboard_color = "primary"
-history_color = "secondary"
-profile_color = "secondary"
-admin_color = "secondary"
+
     if st.button(
         "📦 Dashboard",
         use_container_width=True,
