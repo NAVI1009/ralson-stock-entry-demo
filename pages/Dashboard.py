@@ -356,6 +356,32 @@ if "update_success" not in st.session_state:
 
     st.session_state.update_success = False
 
+
+    # ======================================================
+# UPDATE BUTTON
+# ======================================================
+
+if st.button(
+    "✅ Update Stock",
+    use_container_width=True
+):
+
+    try:
+
+        # Find selected row
+        row_index = master_df[
+            master_df[MATERIAL_COLUMN]
+            ==
+            selected_material
+        ].index[0]
+
+        old_stock = pd.to_numeric(
+            master_df.loc[row_index, STOCK_COLUMN],
+            errors="coerce"
+        )
+        if pd.isna(old_stock):
+            old_stock = 0
+            old_stock = int(old_stock)
 if st.session_state.update_success:
 
     data = st.session_state.success_data
@@ -392,31 +418,6 @@ margin-bottom:25px;
 """,
     unsafe_allow_html=True
 )
-    # ======================================================
-# UPDATE BUTTON
-# ======================================================
-
-if st.button(
-    "✅ Update Stock",
-    use_container_width=True
-):
-
-    try:
-
-        # Find selected row
-        row_index = master_df[
-            master_df[MATERIAL_COLUMN]
-            ==
-            selected_material
-        ].index[0]
-
-        old_stock = pd.to_numeric(
-            master_df.loc[row_index, STOCK_COLUMN],
-            errors="coerce"
-        )
-        if pd.isna(old_stock):
-            old_stock = 0
-            old_stock = int(old_stock)
 
         # -----------------------------------
         # Update dataframe
