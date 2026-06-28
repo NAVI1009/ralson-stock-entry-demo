@@ -146,10 +146,7 @@ with st.sidebar:
 **User ID:** {st.session_state.user["userid"]}
 
 **Department:** {st.session_state.user["department"]}
-
-**Role:** {st.session_state.user["role"]}
-"""
-    )
+""")
 
     st.markdown("---")
 
