@@ -15,7 +15,35 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="collapsed"
 )
+st.markdown("""
+<style>
 
+/* Hide Sidebar completely */
+
+[data-testid="stSidebar"]{
+    display:none;
+}
+
+/* Hide sidebar navigation */
+
+[data-testid="stSidebarNav"]{
+    display:none;
+}
+
+/* Hide collapsed sidebar button (☰ or >) */
+
+[data-testid="collapsedControl"]{
+    display:none;
+}
+
+/* Remove left padding created by sidebar */
+
+section.main > div{
+    padding-left:2rem !important;
+}
+
+</style>
+""", unsafe_allow_html=True)
 # ============================================
 # DARK ERP CSS
 # ============================================
