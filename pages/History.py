@@ -83,33 +83,19 @@ with st.sidebar:
 **Role:** {st.session_state.user["role"]}
 """
     )
-    if st.button(
-        "📦 Dashboard",
-        use_container_width=True
-    ):
-        st.switch_page("pages/Dashboard.py")
-
+    dashboard_color = "secondary"
+    history_color = "primary"
+    profile_color = "secondary"
+    admin_color = "secondary"
+    if st.button("📦 Dashboard", use_container_width=True, type=dashboard_color):
+    st.switch_page("pages/Dashboard.py")
+    if st.button("📜 History", use_container_width=True, type=history_color):
+    st.switch_page("pages/History.py")
+    if st.button("👤 Profile", use_container_width=True, type=profile_color):
+    st.switch_page("pages/Profile.py")
     if st.session_state.user["userid"] == "ADMIN001":
-
-        if st.button(
-            "⚙️ Admin",
-            use_container_width=True
-        ):
-            st.switch_page("pages/Admin.py")
-
-    if st.button(
-        "📜 History",
-        use_container_width=True
-    ):
-        st.rerun()
-
-    if st.button(
-        "👤 Profile",
-        use_container_width=True
-    ):
-        st.switch_page("pages/Profile.py")
-
-    st.divider()
+    if st.button("⚙️ Admin", use_container_width=True, type=admin_color):
+        st.switch_page("pages/Admin.py")
 
     if st.button(
         "🚪 Logout",
