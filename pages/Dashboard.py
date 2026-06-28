@@ -459,7 +459,7 @@ margin-bottom:20px;
 
 <b>Updated Stock :</b> {data['new_stock']}<br><br>
 
-<b>Trolley No :</b> {data['trolley']}<br><br>
+<b>Trolley No :</b> {data.get('trolley', '-') }<br><br>
 
 <b>Updated By :</b> {data['user']}<br><br>
 
