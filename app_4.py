@@ -364,8 +364,7 @@ with centre:
 
             st.rerun()
         elif st.session_state.page == "register":
-
-        st.markdown("""
+            st.markdown("""
         <h2 style='text-align:center;color:white;'>
         Create New Account
         </h2>
@@ -374,20 +373,16 @@ with centre:
         Register a new employee
         </p>
         """, unsafe_allow_html=True)
-
-        userid = st.text_input(
+            userid = st.text_input(
             "👤 User ID"
-        ).strip().upper()
-
-        name = st.text_input(
+            ).strip().upper()
+            name = st.text_input(
             "👨 Full Name"
-        )
-
-        department = st.text_input(
+            )
+            department = st.text_input(
             "🏭 Department"
-        )
-
-        role = st.selectbox(
+            )
+            role = st.selectbox(
             "Role",
             [
                 "Operator",
@@ -395,38 +390,29 @@ with centre:
                 "Manager",
                 "Admin"
             ]
-        )
-
-        password = st.text_input(
+            )
+            password = st.text_input(
             "🔒 Password",
             type="password"
-        )
-
-        confirm = st.text_input(
+            )
+            confirm = st.text_input(
             "✅ Confirm Password",
             type="password"
-        )
-
-        st.write("")
-
-        c1, c2 = st.columns(2)
-
-        with c1:
-
-            create_btn = st.button(
+            )
+            st.write("")
+            c1, c2 = st.columns(2)
+            with c1:
+                create_btn = st.button(
                 "✅ Create Account",
                 use_container_width=True,
                 type="primary"
-            )
-
-        with c2:
-
-            back_btn = st.button(
+                )
+            with c2:
+                back_btn = st.button(
                 "⬅ Back",
                 use_container_width=True
             )
-
-        if create_btn:
+                if create_btn:
 
             users = load_users()
 
