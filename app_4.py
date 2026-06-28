@@ -73,13 +73,30 @@ max-width:1450px;
 
 .stTextInput input{
 
-background:white;
+height:60px !important;
 
-border:2px solid #D1D5DB;
+border-radius:18px !important;
 
-border-radius:12px;
+border:2px solid #D1D5DB !important;
 
-color:black;
+font-size:18px !important;
+
+padding-left:18px !important;
+
+background:white !important;
+
+color:black !important;
+
+box-shadow:0 4px 12px rgba(0,0,0,.08);
+
+}
+input[type="password"]{
+
+height:60px !important;
+
+border-radius:18px !important;
+
+font-size:18px !important;
 
 }
 
@@ -127,56 +144,73 @@ transform:translateY(-2px);
 
 }
 
-/* Login Button */
+/* LOGIN BUTTON */
 
-div[data-testid="column"]:first-child .stButton>button{
+div[data-testid="column"]:nth-of-type(1) button{
 
-background:#D71920;
+background:#22C55E !important;
 
-color:white;
+color:white !important;
 
-border:none;
+border:none !important;
 
-}
+border-radius:18px !important;
 
-/* Register */
+height:58px !important;
 
-div[data-testid="column"]:last-child .stButton>button{
+font-size:20px !important;
 
-background:#111827;
-
-color:white;
-
-border:none;
+font-weight:700 !important;
 
 }
 
-/* Forgot */
+/* REGISTER BUTTON */
 
-.stButton:last-child>button{
+div[data-testid="column"]:nth-of-type(2) button{
 
-background:#111827;
+background:#3B82F6 !important;
 
-color:white;
+color:white !important;
 
-border:none;
+border:none !important;
+
+border-radius:18px !important;
+
+height:58px !important;
+
+font-size:20px !important;
+
+font-weight:700 !important;
 
 }
-label{
+/* FORGOT PASSWORD */
 
-color:#374151 !important;
+button[kind="secondary"]{
 
-font-weight:600;
+background:#3B82F6 !important;
 
-font-size:16px;
+color:white !important;
+
+border:none !important;
+
+border-radius:18px !important;
+
+height:58px !important;
+
+font-size:20px !important;
+
+font-weight:700 !important;
 
 }
+/* CHECKBOX */
 
-/* Checkbox */
+.stCheckbox label{
 
-.stCheckbox{
+color:black !important;
 
-font-size:16px;
+font-size:18px !important;
+
+font-weight:600 !important;
 
 }
 
@@ -500,27 +534,23 @@ with right:
 
             st.write("")
 
-            c1, c2 = st.columns(2)
+            left_space, c1, c2, right_space = st.columns([0.15, 1, 1, 0.15])
 
             with c1:
-
                 login_btn = st.button(
                     "🔑 Login",
                     use_container_width=True,
                     type="primary"
                 )
-
             with c2:
-
                 register_btn = st.button(
                     "📝 Register",
                     use_container_width=True
                 )
-
-            forgot_btn = st.button(
-                "Forgot Password?",
-                use_container_width=True
-            )
+                forgot_btn = st.button(
+                    "Forgot Password?",
+                    use_container_width=True
+                )
 
             # =====================================
             # LOGIN
