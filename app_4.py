@@ -18,13 +18,25 @@ st.set_page_config(
 # Hide Streamlit navigation/sidebar
 st.markdown("""
 <style>
-[data-testid="stSidebarNav"]{
-display:none;
+
+/* Main background */
+.stApp{
+    background: linear-gradient(135deg,#F8FAFC,#EEF2F7);
 }
 
-[data-testid="stSidebar"]{
-display:none;
+/* Optional subtle grid pattern */
+.stApp::before{
+    content:"";
+    position:fixed;
+    inset:0;
+    background-image:
+        linear-gradient(rgba(0,91,172,0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,91,172,0.05) 1px, transparent 1px);
+    background-size:40px 40px;
+    pointer-events:none;
+    z-index:-1;
 }
+
 </style>
 """, unsafe_allow_html=True)
 
@@ -76,22 +88,32 @@ users = load_users()
 # LOGIN PAGE
 # ==========================================
 
-col1, col2 = st.columns([1,5])
+col1, col2 = st.columns([2,5])
 
 with col1:
-    st.image("ralson_logo.png", width=130)
+    st.image(
+        "ralson_logo.png",
+        width=320
+    )
 
 with col2:
     st.markdown("""
-    <h1 style="color:#005BAC;margin-top:20px;">
-    RALSON PPC STOCK MANAGEMENT
+    <h1 style="
+        color:#005BAC;
+        margin-top:50px;
+        font-size:54px;
+        font-weight:800;
+    ">
+        RALSON PPC STOCK MANAGEMENT
     </h1>
 
-    <h4 style="color:gray;">
-    Production Planning & Control
-    </h4>
-    """,
-    unsafe_allow_html=True)
+    <h3 style="
+        color:#666;
+        margin-top:-10px;
+    ">
+        Production Planning & Control
+    </h3>
+    """, unsafe_allow_html=True)
 # ==========================================
 # LOGIN
 # ==========================================
