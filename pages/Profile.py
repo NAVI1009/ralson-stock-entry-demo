@@ -137,10 +137,7 @@ with st.sidebar:
 **Department:** {st.session_state.user["department"]}
 """
     )
-    dashboard_color = "secondary"
-history_color = "secondary"
-profile_color = "primary"
-admin_color = "secondary"
+
 
 
     if st.button("📦 Dashboard", use_container_width=True):
