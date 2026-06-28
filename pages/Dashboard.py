@@ -143,7 +143,7 @@ with st.sidebar:
         st.session_state.user = {}
 
         st.switch_page("app_4.py")
-	# ============================================
+    # ============================================
 # HEADER
 # ============================================
 
@@ -253,11 +253,8 @@ new_stock = st.number_input(
 if st.button(
     "✅ Update Stock",
     use_container_width=True
-):
-
+    ):
     try:
-
-        # Find selected material
         row_index = master_df[
             master_df[MATERIAL_COL] == selected_material
         ].index[0]
@@ -306,26 +303,21 @@ if st.button(
             log,
             value_input_option="USER_ENTERED"
         )
-
-        # ============================================
-        # SUCCESS MESSAGE
-        # ============================================
-
-st.success("Stock Updated Successfully")
-st.balloons()
-st.markdown(
-	f"""
-	## ✅ Stock Updated
-	**Material:** {selected_material}
-	**Code:** {material_code}
-	**Previous Stock:** {old_stock}
-	**Updated Stock:** {new_stock}
-	**Updated By:** {st.session_state.user["name"]}
-	"""
-)
-st.rerun()
-except Exception as e:
-st.error(f"❌ {e}")
+        st.success("Stock Updated Successfully")
+        st.balloons()
+        st.markdown(
+    f"""
+    ## ✅ Stock Updated
+    **Material:** {selected_material}
+    **Code:** {material_code}
+    **Previous Stock:** {old_stock}
+    **Updated Stock:** {new_stock}
+    **Updated By:** {st.session_state.user["name"]}
+    """
+    )
+        st.rerun()
+    except Exception as e:
+        st.error(f"❌ {e}")
 
 # ============================================
 # ADMIN - RECENT ACTIVITY
