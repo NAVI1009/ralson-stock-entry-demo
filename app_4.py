@@ -279,10 +279,8 @@ with centre:
     )
 
     remember = st.checkbox("Remember Me")
-
-        st.write("")
-
-        c1, c2 = st.columns(2)
+    st.write("")
+    c1, c2 = st.columns(2)
 
     with c1:
         login_btn = st.button(
