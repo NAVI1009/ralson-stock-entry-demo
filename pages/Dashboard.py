@@ -290,7 +290,8 @@ material_list = sorted(
     .tolist()
 
 )
-
+if "last_material" not in st.session_state:
+    st.session_state.last_material = ""
 selected_material = st.selectbox(
 
     "Material Description",
@@ -300,6 +301,13 @@ selected_material = st.selectbox(
     index=0
 
 )
+# Hide success card when material changes
+if st.session_state.last_material != selected_material:
+
+    st.session_state.update_success = False
+    st.session_state.success_data = {}
+
+    st.session_state.last_material = selected_material
 
 selected_row = master_df[
     master_df[MATERIAL_COLUMN]
