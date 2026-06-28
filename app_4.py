@@ -413,8 +413,7 @@ with centre:
                 use_container_width=True
             )
                 if create_btn:
-
-            users = load_users()
+                    users = load_users()
 
             existing = users[
                 users["UserId"]
@@ -478,13 +477,8 @@ with centre:
             st.session_state.page = "login"
 
             st.rerun()
-            # ============================================
-    # FORGOT PASSWORD
-    # ============================================
-
-    elif st.session_state.page == "forgot":
-
-        st.markdown("""
+        elif st.session_state.page == "forgot":
+            st.markdown("""
         <h2 style='text-align:center;color:white;'>
         Forgot Password
         </h2>
@@ -567,9 +561,8 @@ with centre:
     # RESET PASSWORD
     # ============================================
 
-    elif st.session_state.page == "reset":
-
-        st.markdown("""
+        elif st.session_state.page == "reset":
+            st.markdown("""
         <h2 style='text-align:center;color:white;'>
         Reset Password
         </h2>
