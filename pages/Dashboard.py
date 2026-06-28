@@ -401,15 +401,13 @@ if st.button(
             selected_material
         ].index[0]
 
-        old_stock = int(
-            pd.to_numeric(
-                master_df.loc[
-                    row_index,
-                    STOCK_COLUMN
-                ],
-                errors="coerce"
-            ) or 0
+        old_stock = pd.to_numeric(
+            master_df.loc[row_index, STOCK_COLUMN],
+            errors="coerce"
         )
+        if pd.isna(old_stock):
+            old_stock = 0
+            old_stock = int(old_stock)
 
         # -----------------------------------
         # Update dataframe
