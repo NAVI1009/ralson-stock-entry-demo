@@ -23,169 +23,89 @@ st.set_page_config(
 st.markdown("""
 <style>
 
-/* Hide Streamlit */
+/* USER ID + PASSWORD BOX */
 
-#MainMenu,
-footer,
-header{
-visibility:hidden;
-}
+.stTextInput > div{
 
-[data-testid="stSidebar"]{
-display:none;
-}
+    background:#1E293B !important;
 
-/* Background */
+    border:1px solid #334155 !important;
 
-.stApp{
+    border-radius:18px !important;
 
-background:#0F172A;
+    padding:4px !important;
 
-background-image:
-radial-gradient(circle at top right,#1E3A8A 0%,transparent 35%),
-radial-gradient(circle at bottom left,#1E293B 0%,transparent 35%);
-
-color:white;
+    box-shadow:0 6px 20px rgba(0,0,0,.25);
 
 }
 
-/* Page */
+.stTextInput > div:focus-within{
 
-.block-container{
+    border:1px solid #22C55E !important;
 
-padding-top:30px;
-
-max-width:1450px;
+    box-shadow:0 0 12px rgba(34,197,94,.35);
 
 }
 
-/* Headings */
-
-h1,h2,h3{
-
-color:white;
-
-font-family:'Segoe UI';
-
-}
-
-/* Text */
-
-p,label{
-
-color:#CBD5E1 !important;
-
-}
-
-/* Text Inputs */
+/* Actual input */
 
 .stTextInput input{
 
-background:#1E293B !important;
+    background:transparent !important;
 
-color:white !important;
+    border:none !important;
 
-border:1px solid #334155 !important;
+    outline:none !important;
 
-border-radius:14px !important;
+    color:white !important;
 
-height:55px;
+    font-size:20px !important;
 
-font-size:18px;
+    height:58px !important;
+
+    padding-left:16px !important;
+
+    box-shadow:none !important;
 
 }
+
+/* Placeholder */
 
 .stTextInput input::placeholder{
 
-color:#94A3B8;
+    color:#94A3B8 !important;
 
 }
 
-.stTextInput input:focus{
+/* Password eye */
 
-border:1px solid #22C55E !important;
+[data-testid="stTextInput"] button{
 
-box-shadow:0 0 12px rgba(34,197,94,.25);
+    background:transparent !important;
 
-}
+    border:none !important;
 
-/* Checkbox */
-
-.stCheckbox label{
-
-color:white !important;
+    color:#CBD5E1 !important;
 
 }
 
-/* Buttons */
+/* Remove Streamlit borders */
 
-.stButton>button{
+[data-baseweb="base-input"]{
 
-height:52px;
+    border:none !important;
 
-border-radius:14px;
-
-font-size:17px;
-
-font-weight:700;
-
-border:none;
-
-transition:.25s;
+    background:transparent !important;
 
 }
 
-.stButton>button:hover{
+[data-baseweb="input"]{
 
-transform:translateY(-2px);
+    border:none !important;
 
-}
+    background:#1E293B !important;
 
-/* Login */
-
-button[kind="primary"]{
-
-background:#22C55E !important;
-
-color:white !important;
-
-}
-
-/* Normal */
-
-button[kind="secondary"]{
-
-background:#3B82F6 !important;
-
-color:white !important;
-
-}
-
-/* Select */
-
-.stSelectbox div{
-
-background:#1E293B;
-
-color:white;
-
-border-radius:14px;
-
-}
-
-/* Success */
-
-.stSuccess{
-
-border-radius:15px;
-
-}
-
-/* Error */
-
-.stError{
-
-border-radius:15px;
+    border-radius:18px !important;
 
 }
 
@@ -345,20 +265,21 @@ with right:
     # LOGIN PAGE
     # ============================================
 
-    if st.session_state.page == "login":
+   left, centre, right = st.columns([1,3,1])
+with centre:
 
-        userid = st.text_input(
-            "👤 User ID",
-            placeholder="Enter User ID"
-        ).strip().upper()
+    userid = st.text_input(
+        "👤 User ID",
+        placeholder="Enter User ID"
+    )
 
-        password = st.text_input(
-            "🔒 Password",
-            type="password",
-            placeholder="Enter Password"
-        )
+    password = st.text_input(
+        "🔒 Password",
+        type="password",
+        placeholder="Enter Password"
+    )
 
-        remember = st.checkbox("Remember Me")
+    remember = st.checkbox("Remember Me")
 
         st.write("")
 
