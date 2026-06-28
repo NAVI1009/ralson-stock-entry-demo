@@ -76,26 +76,22 @@ users = load_users()
 # LOGIN PAGE
 # ==========================================
 
-st.markdown(
-    """
-    <div style="
-    text-align:center;
-    padding:20px;
-    ">
+col1, col2 = st.columns([1,5])
 
-    <h1 style="color:#005BAC;">
-    🏭 RALSON STOCK MANAGEMENT
+with col1:
+    st.image("ralson_logo.png", width=130)
+
+with col2:
+    st.markdown("""
+    <h1 style="color:#005BAC;margin-top:20px;">
+    RALSON PPC STOCK MANAGEMENT
     </h1>
 
-    <h4>
+    <h4 style="color:gray;">
     Production Planning & Control
     </h4>
-
-    </div>
     """,
-    unsafe_allow_html=True
-)
-
+    unsafe_allow_html=True)
 # ==========================================
 # LOGIN
 # ==========================================
