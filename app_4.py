@@ -73,15 +73,19 @@ max-width:1450px;
 
 .stTextInput input{
 
-height:50px;
+background:white;
+
+border:2px solid #D1D5DB;
 
 border-radius:12px;
 
-border:1px solid #D8DCE5;
+color:black;
 
-font-size:16px;
+}
 
-background:white;
+.stTextInput input:focus{
+
+border:2px solid #005BAC;
 
 }
 
@@ -97,19 +101,27 @@ border-radius:12px;
 
 .stButton>button{
 
-height:50px;
+height:52px;
 
-border-radius:12px;
+border-radius:14px;
 
-font-size:16px;
+font-size:17px;
 
 font-weight:700;
 
-transition:.25s;
+border:none;
+
+transition:.3s;
+
+background:#D71920;
+
+color:white;
 
 }
 
 .stButton>button:hover{
+
+background:#B91218;
 
 transform:translateY(-2px);
 
@@ -150,6 +162,15 @@ color:white;
 border:none;
 
 }
+label{
+
+color:#374151 !important;
+
+font-weight:600;
+
+font-size:16px;
+
+}
 
 /* Checkbox */
 
@@ -166,7 +187,21 @@ h1,h2,h3,h4{
 font-family:Segoe UI;
 
 }
+div[data-testid="column"]:nth-of-type(1) .stButton>button{
 
+background:#D71920;
+
+color:white;
+
+}
+
+div[data-testid="column"]:nth-of-type(2) .stButton>button{
+
+background:#111827;
+
+color:white;
+
+}
 </style>
 """, unsafe_allow_html=True)
 
@@ -957,58 +992,5 @@ st.write("")
 # FOOTER
 # ==========================================================
 
-st.markdown("""
----
-""")
 
-footer1, footer2, footer3 = st.columns([2,2,2])
 
-with footer1:
-
-    st.markdown("""
-#### 🏭 Ralson Tyres Limited
-
-Production Planning & Control
-""")
-
-with footer2:
-
-    st.markdown("""
-#### 🚀 Features
-
-- Cloud Based
-- Multi User
-- Secure Login
-- Real Time Updates
-""")
-
-with footer3:
-
-    st.markdown("""
-#### ℹ Information
-
-Version **1.0**
-
-Powered by **Streamlit**
-
-Database **Google Sheets**
-""")
-
-st.markdown("""
-<div style="
-text-align:center;
-color:#777;
-padding:25px;
-font-size:15px;
-">
-
-<hr>
-
-© 2026 <b>Ralson Tyres Limited</b>
-
-<br>
-
-Production Planning & Control Portal
-
-</div>
-""", unsafe_allow_html=True)
