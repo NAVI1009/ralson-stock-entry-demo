@@ -311,21 +311,21 @@ if st.button(
         # SUCCESS MESSAGE
         # ============================================
 
-    st.success("Stock Updated Successfully")
-	st.balloons()
+st.success("Stock Updated Successfully")
+st.balloons()
 st.markdown(
-		f"""
-		## ✅ Stock Updated
-		**Material:** {selected_material}
-		**Code:** {material_code}
-		**Previous Stock:** {old_stock}
-		**Updated Stock:** {new_stock}
-		**Updated By:** {st.session_state.user["name"]}
-		"""
-	)
-	st.rerun()
+	f"""
+	## ✅ Stock Updated
+	**Material:** {selected_material}
+	**Code:** {material_code}
+	**Previous Stock:** {old_stock}
+	**Updated Stock:** {new_stock}
+	**Updated By:** {st.session_state.user["name"]}
+	"""
+)
+st.rerun()
 except Exception as e:
-	st.error(f"❌ {e}")
+st.error(f"❌ {e}")
 
 # ============================================
 # ADMIN - RECENT ACTIVITY
