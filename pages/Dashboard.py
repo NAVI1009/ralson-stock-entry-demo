@@ -90,13 +90,7 @@ if not st.session_state.get("logged_in", False):
 # ==========================
 # CREATE LOG FILE IF MISSING
 # ==========================
-config_df = get_as_dataframe(
-    sheet.worksheet("Config")
-).dropna(how="all")
 
-MATERIAL_COLUMN = "Material description"
-CODE_COLUMN = "Code"
-STOCK_COLUMN = "13 GT"
 
 # ==========================
 # HEADER CARD
@@ -146,11 +140,6 @@ logs_df = pd.DataFrame(
     logs_ws.get_all_records()
 )
 
-config_ws = sheet.worksheet("Config")
-
-config_df = pd.DataFrame(
-    config_ws.get_all_records()
-)
 st.write("Columns Found:")
 st.write(df.columns.tolist())
 MATERIAL_COLUMN = "Material Description"
