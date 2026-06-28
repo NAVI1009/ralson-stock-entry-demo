@@ -213,12 +213,12 @@ with right:
     remember = st.checkbox("Remember Me")
     c1, c2 = st.columns(2)
     with c1:
-    login_btn = st.button(
+        login_btn = st.button(
         "Login",
         use_container_width=True
     )
     with c2:
-    register_btn = st.button(
+        register_btn = st.button(
         "Register",
         use_container_width=True
     )
@@ -273,20 +273,14 @@ with right:
                     st.switch_page(
                         "pages/Dashboard.py"
                     )
-
-        if register_btn:
-
-            st.session_state.page = "register"
-
-            st.rerun()
-
-        if forgot_btn:
-
-            st.session_state.page = "forgot"
-
-            st.rerun()
-        elif st.session_state.page == "register":
-            st.markdown("""
+                    if register_btn:
+                        st.session_state.page = "register"
+                        st.rerun()
+                    if forgot_btn:
+                        st.session_state.page = "forgot"
+                        st.rerun()
+                    elif st.session_state.page == "register":
+                        st.markdown("""
         <h2 style='text-align:center;color:white;'>
         Create New Account
         </h2>
@@ -393,14 +387,11 @@ with right:
                 st.session_state.page = "login"
 
                 st.rerun()
-
-        if back_btn:
-
-            st.session_state.page = "login"
-
-            st.rerun()
-        elif st.session_state.page == "forgot":
-            st.markdown("""
+                if back_btn:
+                    st.session_state.page = "login"
+                    st.rerun()
+                elif st.session_state.page == "forgot":
+                    st.markdown("""
         <h2 style='text-align:center;color:white;'>
         Forgot Password
         </h2>
@@ -409,37 +400,27 @@ with right:
         Verify your identity
         </p>
         """, unsafe_allow_html=True)
-
-        userid = st.text_input(
-            "👤 User ID"
-        ).strip().upper()
-
-        name = st.text_input(
-            "👨 Full Name"
-        )
-
-        st.write("")
-
-        c1, c2 = st.columns(2)
-
-        with c1:
-
-            verify_btn = st.button(
+                    userid = st.text_input(
+                        "👤 User ID"
+                        ).strip().upper()
+                    name = st.text_input(
+                        "👨 Full Name"
+                        )
+                    st.write("")
+                    c1, c2 = st.columns(2)
+                    with c1:
+                        verify_btn = st.button(
                 "✅ Verify",
                 use_container_width=True,
                 type="primary"
-            )
-
-        with c2:
-
-            back_btn = st.button(
+                )
+                        with c2:
+                            back_btn = st.button(
                 "⬅ Back",
                 use_container_width=True
-            )
-
-        if verify_btn:
-
-            users = load_users()
+                )
+                            if verify_btn:
+                                users = load_users()
 
             row = users[
                 (
@@ -472,19 +453,16 @@ with right:
                 st.session_state.page = "reset"
 
                 st.rerun()
-
-        if back_btn:
-
-            st.session_state.page = "login"
-
-            st.rerun()
+                if back_btn:
+                    st.session_state.page = "login"
+                    st.rerun()
 
     # ============================================
     # RESET PASSWORD
     # ============================================
 
-        elif st.session_state.page == "reset":
-            st.markdown("""
+                elif st.session_state.page == "reset":
+                    st.markdown("""
         <h2 style='text-align:center;color:white;'>
         Reset Password
         </h2>
@@ -493,39 +471,32 @@ with right:
         Create your new password
         </p>
         """, unsafe_allow_html=True)
-
-        pwd1 = st.text_input(
+                    pwd1 = st.text_input(
             "🔒 New Password",
             type="password"
-        )
-
-        pwd2 = st.text_input(
+            )
+                    pwd2 = st.text_input(
             "✅ Confirm Password",
             type="password"
-        )
-
-        st.write("")
-
-        c1, c2 = st.columns(2)
-
-        with c1:
-
-            save_btn = st.button(
+            )
+                    st.write("")
+                    c1, c2 = st.columns(2)
+            with c1:
+                save_btn = st.button(
                 "💾 Save Password",
                 use_container_width=True,
                 type="primary"
             )
 
-        with c2:
-
-            cancel_btn = st.button(
+            with c2:
+                cancel_btn = st.button(
                 "❌ Cancel",
                 use_container_width=True
             )
 
-        if save_btn:
+            if save_btn:
 
-            if pwd1 == "":
+              if pwd1 == "":
 
                 st.error(
                     "Password cannot be empty."
@@ -576,13 +547,10 @@ with right:
 
                 st.rerun()
 
-        if cancel_btn:
-
-            st.session_state.reset_user = ""
-
-            st.session_state.page = "login"
-
-            st.rerun()
+            if cancel_btn:
+                st.session_state.reset_user = ""
+                st.session_state.page = "login"
+                st.rerun()
 # ============================================
 # FOOTER
 # ============================================
