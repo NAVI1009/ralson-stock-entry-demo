@@ -145,10 +145,7 @@ users = load_users()
 # PAGE LAYOUT
 # ==========================================================
 
-left, middle, right = st.columns(
-    [1.45, 0.12, 0.95],
-    gap="large"
-)
+left, middle, right = st.columns([1.5, 0.15, 1], gap="large")
 
 # ==========================================================
 # LEFT PANEL
@@ -218,20 +215,10 @@ Google Sheets
 
 with right:
 
-    st.markdown("""
-    <div style="
-        background:#f8f9fa;
-        padding:30px;
-        border-radius:18px;
-        box-shadow:0px 4px 18px rgba(0,0,0,0.10);
-    ">
-    """, unsafe_allow_html=True)
+    st.markdown("<div style='margin-top:120px'></div>", unsafe_allow_html=True)
 
-    st.markdown("""
-    ## Sign In
-
-    Login to continue
-    """)
+    st.title("Sign In")
+    st.write("Login to continue")
 
     # ==========================================================
     # LOGIN PAGE
