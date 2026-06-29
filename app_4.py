@@ -173,20 +173,6 @@ with left:
 
     st.markdown("""
 This portal allows **Production Planning & Control** employees to update stock in real time.
-
-### Features
-
-✔ Real Time Stock Updates
-
-✔ Cloud Database
-
-✔ Multi User Access
-
-✔ Secure Login
-
-✔ Stock History
-
-✔ Admin Panel
 """)
 
     st.write("")
@@ -214,13 +200,9 @@ View Logs
     with c3:
 
         st.info("""
-### 👥 Users
+### 👥 Multiple Users 
+         Active
 
-Supervisor
-
-Operator
-
-Admin
 """)
 
     with c4:
