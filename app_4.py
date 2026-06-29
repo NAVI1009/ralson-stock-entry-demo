@@ -419,8 +419,8 @@ type="password",
 key="reg_password"
 )
 confirm = st.text_input(
-"Confirm Password"
-type="password"
+"Confirm Password",
+type="password",
 key="reg_confirm"
 )
 st.write("")
