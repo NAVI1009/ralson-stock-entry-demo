@@ -52,9 +52,7 @@ display:none;
 /* Background */
 
 .stApp{
-
-background:#111827;
-
+    background: transparent !important;
 }
 
 /* Main */
