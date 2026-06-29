@@ -426,7 +426,7 @@ key="reg_confirm"
 st.write("")
 col1, col2 = st.columns(2)
 with col1:
-create_btn = st.button(
+    create_btn = st.button(
             "Create Account",
             use_container_width=True,
             type="primary"
