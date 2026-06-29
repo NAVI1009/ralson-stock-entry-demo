@@ -372,8 +372,7 @@ with right:
                 st.error("Please enter User ID.")
 
             elif full_name == "":
-            	st.error("Please enter your name
-            	")
+            	st.error("Please enter your name")
 
             elif department == "":
 
