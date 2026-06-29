@@ -48,7 +48,7 @@ display:none;
 /* Background */
 
 .stApp{
-    background:white;
+    background: transparent !important;
 }
 
 /* Main Container */
