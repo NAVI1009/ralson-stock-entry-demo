@@ -285,18 +285,17 @@ Login to continue
 # ============================================
 
 if st.session_state.page == "login":
-	    userid = st.text_input(
+
+    userid = st.text_input(
         "👤 User ID"
     ).strip().upper()
 
     password = st.text_input(
-"🔒 Password",
-type="password"
-)
+        "🔒 Password",
+        type="password"
+    )
 
-    remember = st.checkbox(
-"Remember Me"
-)
+    remember = st.checkbox("Remember Me")
 
     st.write("")
 
