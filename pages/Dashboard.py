@@ -253,7 +253,7 @@ col1, col2, col3 = st.columns(3)
 with col1:
 
     st.metric(
-        label="📦 Total Materials",
+        label="📦 Total SKU",
         value=f"{total_materials:,}"
     )
 
