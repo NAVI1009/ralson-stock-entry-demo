@@ -290,13 +290,13 @@ if st.session_state.page == "login":
     ).strip().upper()
 
     password = st.text_input(
-        "🔒 Password",
-        type="password"
-    )
+"🔒 Password",
+type="password"
+)
 
     remember = st.checkbox(
-        "Remember Me"
-    )
+"Remember Me"
+)
 
     st.write("")
 
