@@ -395,35 +395,35 @@ if st.session_state.page == "login":
 
 elif st.session_state.page == "register":
             st.markdown("## 👤 Create New Account")
-            userid = st.text_input(
-            "User ID"
-             ).strip().upper()
-             name = st.text_input(
-             "Full Name"
-             )
-             department = st.text_input(
-              "Department"
-              )
-              role = st.selectbox(
-              "Role",
-              [
+userid = st.text_input(
+"User ID"
+).strip().upper()
+name = st.text_input(
+"Full Name"
+)
+department = st.text_input(
+"Department"
+)
+role = st.selectbox(
+"Role",
+[
             "Operator",
             "Supervisor",
             "Manager",
             "Admin"
-            ]
-            )
-            password = st.text_input(
-            "Password",
-             type="password",
-             key="reg_password"
-             )
-             confirm = st.text_input(
-             "Confirm Password"
-             type="password"
-             key="reg_confirm"
-             )
-             st.write("")
+]
+)
+password = st.text_input(
+"Password",
+type="password",
+key="reg_password"
+)
+confirm = st.text_input(
+"Confirm Password"
+type="password"
+key="reg_confirm"
+)
+st.write("")
 
 
 
