@@ -396,36 +396,36 @@ if st.session_state.page == "login":
 elif st.session_state.page == "register":
             st.markdown("## 👤 Create New Account")
             userid = st.text_input(
-        "User ID"
-         ).strip().upper()
-         name = st.text_input(
-        "Full Name"
-         )
-         department = st.text_input(
-        "Department"
-         )
-         role = st.selectbox(
-        "Role",
-        [
+            "User ID"
+             ).strip().upper()
+             name = st.text_input(
+             "Full Name"
+             )
+             department = st.text_input(
+              "Department"
+              )
+              role = st.selectbox(
+              "Role",
+              [
             "Operator",
             "Supervisor",
             "Manager",
             "Admin"
-        ]
-        )
-        password = st.text_input(
-        "Password",
-        type="password",
-        key="reg_password"
-        )
-        confirm = st.text_input(
-        "Confirm Password",
-        type="password",
-        key="reg_confirm"
-        )
-        st.write("")
+            ]
+            )
+            password = st.text_input(
+            "Password",
+             type="password",
+             key="reg_password"
+             )
+             confirm = st.text_input(
+             "Confirm Password"
+             type="password"
+             key="reg_confirm"
+             )
+             st.write("")
 
-    
+
 
     col1, col2 = st.columns(2)
 
@@ -517,16 +517,13 @@ elif st.session_state.page == "register":
 
 elif st.session_state.page == "forgot":
             st.markdown("## 🔑 Forgot Password")
-
-    userid = st.text_input(
-        "User ID"
-    ).strip().upper()
-
-    name = st.text_input(
-        "Full Name"
-    )
-
-    st.write("")
+            userid = st.text_input(
+            "User ID"
+            ).strip().upper()
+            name = st.text_input(
+            "Full Name"
+            )
+            st.write("")
 
     col1, col2 = st.columns(2)
 
@@ -696,4 +693,4 @@ st.write("")
 st.divider()
 
 st.caption(
-    "© 2026 Ralson Tyres Ltd. | PPC Stock Management Portal")
+    "© 2026 Ralson Tyres Ltd. | PPC Stock Management Portal") 
