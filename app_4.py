@@ -201,7 +201,7 @@ View Logs
 
         st.info("""
 ### 👥 Multiple Users 
-         Active
+Active
 
 """)
 
