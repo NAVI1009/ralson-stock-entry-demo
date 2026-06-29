@@ -52,7 +52,7 @@ display:none;
 /* Background */
 
 .stApp{
-    background: transparent !important;
+    background:white;
 }
 
 /* Main */
@@ -68,27 +68,18 @@ max-width:1450px;
 /* Text */
 
 h1,h2,h3,h4,h5,label,p{
-
-color:white !important;
-
+    color:inherit !important;
+}
+div[data-testid="stMarkdownContainer"]{
+    color: inherit !important;
 }
 
 /* Textboxes */
 
 .stTextInput input{
-
-background:#1F2937 !important;
-
-color:white !important;
-
-border:1px solid #374151 !important;
-
-border-radius:12px !important;
-
-height:50px;
-
-font-size:18px;
-
+    border-radius:12px !important;
+    height:50px;
+    font-size:17px;
 }
 
 .stTextInput input:focus{
@@ -181,10 +172,7 @@ users = load_users()
 # PAGE LAYOUT
 # ============================================
 
-left, right = st.columns(
-    [1.3, 1],
-    gap="large"
-)
+left, middle, right = st.columns([1.5, 0.3, 1], gap="large")
 
 # ============================================
 # LEFT PANEL
@@ -271,10 +259,13 @@ Google Sheets
 with right:
 
     st.markdown("""
-# Sign In
-
-Login to continue
-""")
+<div style="
+background:#f8f9fa;
+padding:30px;
+border-radius:15px;
+box-shadow:0 4px 15px rgba(0,0,0,.1);
+">
+""", unsafe_allow_html=True)
 
     st.write("")
 
@@ -386,6 +377,7 @@ if st.session_state.page == "login":
         st.session_state.page = "forgot"
 
         st.rerun()
+    st.markdown("</div>", unsafe_allow_html=True)
 # ============================================
 # REGISTER PAGE
 # ============================================
