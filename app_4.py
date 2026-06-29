@@ -388,56 +388,66 @@ if st.session_state.page == "login":
         st.session_state.page = "forgot"
 
         st.rerun()
-
 # ============================================
 # REGISTER PAGE
 # ============================================
 
 elif st.session_state.page == "register":
-            st.markdown("## 👤 Create New Account")
-userid = st.text_input(
-"User ID"
-).strip().upper()
-name = st.text_input(
-"Full Name"
-)
-department = st.text_input(
-"Department"
-)
-role = st.selectbox(
-"Role",
-[
+
+    st.markdown("## 👤 Create New Account")
+
+    userid = st.text_input(
+        "User ID"
+    ).strip().upper()
+
+    name = st.text_input(
+        "Full Name"
+    )
+
+    department = st.text_input(
+        "Department"
+    )
+
+    role = st.selectbox(
+        "Role",
+        [
             "Operator",
             "Supervisor",
             "Manager",
             "Admin"
-]
-)
-password = st.text_input(
-"Password",
-type="password",
-key="reg_password"
-)
-confirm = st.text_input(
-"Confirm Password",
-type="password",
-key="reg_confirm"
-)
-st.write("")
-col1, col2 = st.columns(2)
-with col1:
-    create_btn = st.button(
+        ]
+    )
+
+    password = st.text_input(
+        "Password",
+        type="password",
+        key="reg_password"
+    )
+
+    confirm = st.text_input(
+        "Confirm Password",
+        type="password",
+        key="reg_confirm"
+    )
+
+    st.write("")
+
+    col1, col2 = st.columns(2)
+
+    with col1:
+        create_btn = st.button(
             "Create Account",
             use_container_width=True,
             type="primary"
-)
-with col2:
+        )
 
+    with col2:
         back_btn = st.button(
             "Back",
             use_container_width=True
-)
-if create_btn:
+        )
+
+    if create_btn:
 
         users = load_users()
 
@@ -445,32 +455,25 @@ if create_btn:
             users["UserId"]
             .astype(str)
             .str.upper()
-            ==
-            userid
+            == userid
         ]
 
         if userid == "":
-
             st.error("Please enter User ID.")
 
         elif name == "":
-
             st.error("Please enter Full Name.")
 
         elif department == "":
-
             st.error("Please enter Department.")
 
         elif password == "":
-
             st.error("Please enter Password.")
 
         elif password != confirm:
-
             st.error("Passwords do not match.")
 
         elif not existing.empty:
-
             st.error("User already exists.")
 
         else:
@@ -488,9 +491,7 @@ if create_btn:
 
             load_users.clear()
 
-            st.success(
-                "Account Created Successfully."
-            )
+            st.success("Account Created Successfully.")
 
             time.sleep(1)
 
@@ -502,24 +503,27 @@ if create_btn:
         st.session_state.page = "login"
         st.rerun()
 
-# ============================================
+#  ============================================
 # FORGOT PASSWORD
 # ============================================
 
 elif st.session_state.page == "forgot":
-            st.markdown("## 🔑 Forgot Password")
-            userid = st.text_input(
-            "User ID"
-            ).strip().upper()
-            name = st.text_input(
-            "Full Name"
-            )
-            st.write("")
+
+    st.markdown("## 🔑 Forgot Password")
+
+    userid = st.text_input(
+        "User ID"
+    ).strip().upper()
+
+    name = st.text_input(
+        "Full Name"
+    )
+
+    st.write("")
 
     col1, col2 = st.columns(2)
 
     with col1:
-
         verify_btn = st.button(
             "Verify",
             use_container_width=True,
@@ -527,7 +531,6 @@ elif st.session_state.page == "forgot":
         )
 
     with col2:
-
         back_btn = st.button(
             "Back",
             use_container_width=True
@@ -542,24 +545,20 @@ elif st.session_state.page == "forgot":
                 users["UserId"]
                 .astype(str)
                 .str.upper()
-                ==
-                userid
+                == userid
             )
             &
             (
                 users["Name"]
                 .astype(str)
                 .str.lower()
-                ==
-                name.lower()
+                == name.lower()
             )
         ]
 
         if row.empty:
 
-            st.error(
-                "Invalid User ID or Name."
-            )
+            st.error("Invalid User ID or Name.")
 
         else:
 
@@ -685,3 +684,4 @@ st.divider()
 
 st.caption(
     "© 2026 Ralson Tyres Ltd. | PPC Stock Management Portal") 
+            
