@@ -423,28 +423,21 @@ confirm = st.text_input(
 type="password",
 key="reg_confirm"
 )
-st.write("")
-
-
-
-    col1, col2 = st.columns(2)
-
-    with col1:
-
-        create_btn = st.button(
+st.write(""")
+col1, col2 = st.columns(2)
+with col1:
+create_btn = st.button(
             "Create Account",
             use_container_width=True,
             type="primary"
-        )
-
-    with col2:
+)
+with col2:
 
         back_btn = st.button(
             "Back",
             use_container_width=True
-        )
-
-    if create_btn:
+)
+if create_btn:
 
         users = load_users()
 
