@@ -317,32 +317,32 @@ with right:
         Register a new employee
         </p>
         """, unsafe_allow_html=True)
-userid = st.text_input(
-            "👤 User ID"
-            ).strip().upper()
-            name = st.text_input(
-            "👨 Full Name"
-            )
-            department = st.text_input(
-            "🏭 Department"
-            )
-            role = st.selectbox(
-            "Role",
-            [
+                        userid = st.text_input(
+                            "👤 User ID"
+                            ).strip().upper()
+                        name = st.text_input(
+                            "👨 Full Name"
+                            )
+                        department = st.text_input(
+                            "🏭 Department"
+                            )
+                        role = st.selectbox(
+                            "Role",
+                            [
                 "Operator",
                 "Supervisor",
                 "Manager",
                 "Admin"
-            ]
-            )
-            password = st.text_input(
-            "🔒 Password",
-            type="password"
-            )
-            confirm = st.text_input(
-            "✅ Confirm Password",
-            type="password"
-            )
+                ]
+                            )
+                        password = st.text_input(
+                            "🔒 Password",
+                            type="password"
+                            )
+                        confirm = st.text_input(
+                            "✅ Confirm Password",
+                            type="password"
+                            )
             st.write("")
             c1, c2 = st.columns(2)
             with c1:
