@@ -499,9 +499,7 @@ if create_btn:
             st.rerun()
 
     if back_btn:
-
         st.session_state.page = "login"
-
         st.rerun()
 
 # ============================================
